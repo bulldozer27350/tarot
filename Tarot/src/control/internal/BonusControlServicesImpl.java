@@ -8,6 +8,10 @@ import control.BonusControlServices;
 import model.Bonus;
 import model.Done;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BonusControlServicesImpl.
+ */
 public class BonusControlServicesImpl implements BonusControlServices {
 
 	@Override

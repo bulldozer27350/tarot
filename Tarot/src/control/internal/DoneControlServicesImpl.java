@@ -11,6 +11,9 @@ import model.Bonus;
 import model.Done;
 import model.Player;
 
+/**
+ * The Class DoneControlServicesImpl.
+ */
 public class DoneControlServicesImpl implements DoneControlServices {
 
 	@Override
@@ -31,7 +34,7 @@ public class DoneControlServicesImpl implements DoneControlServices {
 
 		int nbPointsToDo = getNbPointsToDo(done);
 		isVictory = done.getPointsForTakerTeam() >= nbPointsToDo;
-		int diff = getArrondi(Math.abs(done.getPointsForTakerTeam() - nbPointsToDo));
+		int diff = getRound(Math.abs(done.getPointsForTakerTeam() - nbPointsToDo));
 		int littleAtEnd = getLittleAtEndBonusPoints(done);
 		int hands = getHandBonusPoints(done, isVictory);
 		int contrat = 10;
@@ -48,6 +51,13 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		computeDefenseScore(done, isVictory, total, defenseTeam);
 	}
 
+	/**
+	 * Gets the hand bonus points.
+	 *
+	 * @param done the done
+	 * @param victory the victory
+	 * @return the hand bonus points
+	 */
 	private int getHandBonusPoints(Done done, boolean victory) {
 		int bonusPoints = 0;
 		for (Bonus bonus : done.getBonuses()) {
@@ -65,6 +75,12 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		return bonusPoints;
 	}
 
+	/**
+	 * Gets the defense team.
+	 *
+	 * @param done the done
+	 * @return the defense team
+	 */
 	private List<Player> getDefenseTeam(Done done) {
 		List<Player> defenseTeam = new ArrayList<>();
 		for (Player player : done.getPlayers()) {
@@ -77,6 +93,12 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		return defenseTeam;
 	}
 
+	/**
+	 * Gets the attack team.
+	 *
+	 * @param done the done
+	 * @return the attack team
+	 */
 	private List<Player> getAttackTeam(Done done) {
 		List<Player> attack = new ArrayList<>();
 		attack.add(done.getTaker());
@@ -87,12 +109,27 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		return attack;
 	}
 
+	/**
+	 * Compute defense score.
+	 *
+	 * @param done the done
+	 * @param isVictory the is victory
+	 * @param singlePoints the single points
+	 * @param defenseTeam the defense team
+	 */
 	private void computeDefenseScore(Done done, boolean isVictory, int singlePoints, List<Player> defenseTeam) {
 		for (Player player : defenseTeam) {
 			player.setPoints(player.getPoints() - singlePoints);
 		}
 	}
 
+	/**
+	 * Compute attack score.
+	 *
+	 * @param done the done
+	 * @param victory the victory
+	 * @param singlePoints the single points
+	 */
 	private void computeAttackScore(Done done, boolean victory, int singlePoints) {
 		// Play alone (1 versus 4)
 		if (done.getTaker().equals(done.getCalled())) {
@@ -106,6 +143,12 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		}
 	}
 
+	/**
+	 * Gets the little at end bonus points.
+	 *
+	 * @param done the done
+	 * @return the little at end bonus points
+	 */
 	private int getLittleAtEndBonusPoints(Done done) {
 		int bonusPoints = 0;
 		for (Bonus bonus : done.getBonuses()) {
@@ -121,6 +164,12 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		return bonusPoints;
 	}
 
+	/**
+	 * Gets the nb points to do.
+	 *
+	 * @param done the done
+	 * @return the nb points to do
+	 */
 	private int getNbPointsToDo(Done done) {
 		int nbOudlers = 0;
 		if (done.isExcuseForPlayer()) {
@@ -143,7 +192,13 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		return nbPointsToDo;
 	}
 
-	public int getArrondi(int nombre) {
+	/**
+	 * Gets the round.
+	 *
+	 * @param nombre the nombre
+	 * @return the round
+	 */
+	public int getRound(int nombre) {
 		int round = 0;
 		int roundAt = 5;
 		round = (int) (roundAt * (Math.ceil((nombre + roundAt / 2) / roundAt)));

@@ -4,6 +4,9 @@ import control.PlayerControlServices;
 import model.Done;
 import model.Player;
 
+/**
+ * The Class PlayerControlServicesImpl.
+ */
 public class PlayerControlServicesImpl implements PlayerControlServices {
 
 	@Override
