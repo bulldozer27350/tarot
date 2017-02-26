@@ -1,12 +1,10 @@
 package control.internal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import control.DoneControlServices;
+import control.PlayerControlServices;
 import model.Bonus;
 import model.Done;
 import model.Player;
@@ -15,6 +13,12 @@ import model.Player;
  * The Class DoneControlServicesImpl.
  */
 public class DoneControlServicesImpl implements DoneControlServices {
+
+	private PlayerControlServices playerControlServices;
+	
+	public DoneControlServicesImpl(PlayerControlServices playerControlServicesArg) {
+		playerControlServices = playerControlServicesArg;
+	}
 
 	@Override
 	public void computePoints(Done done) {
@@ -217,6 +221,28 @@ public class DoneControlServicesImpl implements DoneControlServices {
 		// }
 		System.out.println("Arrondi de " + nombre + " = " + round);
 		return round;
+	}
+
+	@Override
+	public void addPlayer(Done done, Player player) {
+		done.getPlayers().add(player);
+	}
+
+	public void addDead(Done done, Player player){
+		done.getDeads().add(player);
+	}
+	
+	@Override
+	public void showResults(Done done) {
+		int total = 0;
+		
+		for (Player player : done.getPlayers()){
+			playerControlServices.showPlayer(done, player);
+			if (!done.getDeads().contains(player)){
+				total += player.getPoints();
+			}
+		}
+		System.out.println("Total : " + total);		
 	}
 
 }

@@ -32,12 +32,4 @@ public interface PlayerControlServices {
 	 */
 	public void showPlayer(Done done, Player player);
 	
-	/**
-	 * Adds the dead.
-	 *
-	 * @param done the done
-	 * @param player the player
-	 */
-	public void addDead(Done done, Player player);
-	
 }

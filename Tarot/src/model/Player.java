@@ -4,6 +4,13 @@ public class Player {
 
 	private String name;
 	private int points;
+	
+	public Player() {
+	}
+	
+	public Player(Player player) {
+		this.name = player.name;
+	}
 	public String getName() {
 		return name;
 	}

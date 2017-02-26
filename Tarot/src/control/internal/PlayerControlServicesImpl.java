@@ -32,9 +32,4 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		System.out.println(stringBuilder.toString());
 	}
 	
-	@Override
-	public void addDead(Done done, Player player) {
-		done.getDeads().add(player);
-	}
-
 }
