@@ -27,7 +27,7 @@ public class TarotLauncher {
 	public String launch(){
 		StringBuffer scores = new StringBuffer();
 		
-		Application application = new Application();
+		Application application = Application.getInstance();
 		
 		Done done1 = new Done();
 		applicationControlServices.addDone(application, done1);
