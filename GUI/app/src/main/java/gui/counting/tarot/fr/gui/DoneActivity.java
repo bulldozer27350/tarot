@@ -53,7 +53,7 @@ public class DoneActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tarot);
+        setContentView(R.layout.activity_done);
         this.okButton = (Button) findViewById(R.id.button);
         this.scores = (TextView) findViewById(R.id.scores);
         this.seekScore = (SeekBar) findViewById(R.id.seekScore);
