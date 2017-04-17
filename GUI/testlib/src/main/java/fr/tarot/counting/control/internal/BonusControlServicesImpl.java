@@ -9,23 +9,24 @@ import fr.tarot.counting.model.Bonus;
 import fr.tarot.counting.model.Done;
 
 // TODO: Auto-generated Javadoc
+
 /**
  * The Class BonusControlServicesImpl.
  */
 public class BonusControlServicesImpl implements BonusControlServices {
 
-	@Override
-	public List<Bonus> getAllBonuses() {
-		List<Bonus> bonuses = new ArrayList<>();
-		
-		bonuses.addAll(Arrays.asList(Bonus.values()));
-		
-		return bonuses;
-	}
+    @Override
+    public List<Bonus> getAllBonuses() {
+        List<Bonus> bonuses = new ArrayList<>();
 
-	@Override
-	public void addBonus(Done done, Bonus bonus) {
-		done.getBonuses().add(bonus);
-	}
+        bonuses.addAll(Arrays.asList(Bonus.values()));
+
+        return bonuses;
+    }
+
+    @Override
+    public void addBonus(Done done, Bonus bonus) {
+        done.getBonuses().add(bonus);
+    }
 
 }
