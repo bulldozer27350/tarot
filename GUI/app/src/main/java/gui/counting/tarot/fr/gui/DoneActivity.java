@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -29,9 +30,7 @@ import fr.tarot.counting.model.Player;
 public class DoneActivity extends AppCompatActivity {
 
     private Button okButton;
-    private TextView scores;
     private TextView currentScore;
-    private TarotLauncher launcher;
     private SeekBar seekScore;
     private Spinner taker;
     private Spinner called;
@@ -42,6 +41,11 @@ public class DoneActivity extends AppCompatActivity {
     private RadioButton garde;
     private RadioButton gardeSans;
     private RadioButton gardeContre;
+    private Spinner littleAtEndSpinner;
+    private Spinner handle1;
+    private Spinner handle2;
+    private Spinner miseries;
+
     private Done done;
     private Application application;
     private ApplicationControlServices applicationControlServices = new ApplicationControlServicesImpl();
@@ -55,7 +59,6 @@ public class DoneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_done);
         this.okButton = (Button) findViewById(R.id.button);
-        this.scores = (TextView) findViewById(R.id.scores);
         this.seekScore = (SeekBar) findViewById(R.id.seekScore);
         this.currentScore = (TextView) findViewById(R.id.currentScore);
         this.called = (Spinner) findViewById(R.id.spinnerCalled);
@@ -67,6 +70,7 @@ public class DoneActivity extends AppCompatActivity {
         this.garde = (RadioButton) findViewById(R.id.radioGarde);
         this.gardeSans = (RadioButton) findViewById(R.id.radioGardeSans);
         this.gardeContre = (RadioButton) findViewById(R.id.radioGardeContre);
+        this.handle1 = (Spinner) findViewById(R.id.spinnerHandle1);
         initDone();
         this.postInitialize();
     }
@@ -100,10 +104,13 @@ public class DoneActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, playersNames);
         taker.setAdapter(adapter);
         called.setAdapter(adapter);
+
+
+        // visit http://stackoverflow.com/questions/38417984/android-spinner-dropdown-checkbox to know how to do so
+
     }
 
     private void onOkClicked(View v) {
-        this.launcher = new TarotLauncher();
         done.setCalled(doneControlServices.getPlayer(done, called.getSelectedItem().toString()));
         done.setTaker(doneControlServices.getPlayer(done, taker.getSelectedItem().toString()));
         done.setLittleForTaker(toggle1.isChecked());
@@ -112,7 +119,6 @@ public class DoneActivity extends AppCompatActivity {
         done.setPointsForTakerTeam(seekScore.getProgress());
         done.setType(getDoneType());
         doneControlServices.computePoints(done);
-		this.scores.setText(doneControlServices.showResults(done));
         Intent intent = new Intent(this, ApplicationActivity.class);
         intent.putExtra(ApplicationActivity.DONE, done);
         intent.putExtra(ApplicationActivity.APPLICATION, application);
