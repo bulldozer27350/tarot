@@ -5,48 +5,68 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import game.control.FoldControlServices;
 import game.control.PlayerControlServices;
 import game.domain.Card;
 import game.domain.Card.Color;
 import game.domain.Card.Name;
 import game.domain.Done;
+import game.domain.Fold;
 import game.domain.Player;
 import game.domain.Player.Team;
 
 public class PlayerControlServicesImpl implements PlayerControlServices {
 
+	private final FoldControlServices foldControlServices;
+	
+	public PlayerControlServicesImpl(FoldControlServices foldControlServicesArg) {
+		this.foldControlServices = foldControlServicesArg;
+	}
+	
 	@Override
 	public void addHand(Player player, Card card) {
 		player.getHand().add(card);
 	}
 
 	@Override
-	public void addFold(Player player, List<Card> cards) {
+	public void addFold(Player player, Fold cards) {
 		player.getFolds().add(cards);
 	}
 
 	@Override
-	public Card playCard(Done done, Player player, List<Card> fold, List<Card> previousFolds) {
+	public Card playCard(Done done, Player player, Fold fold, List<Fold> previousFolds) {
 		Card card = null;
 		List<Card> playerHand = player.getHand();
+		if (fold.getCards().isEmpty()) {
+			fold.setPlayedColor(null);
+		} else if (fold.getCards().get(0).getColor() == Color.AUTRE) {
+			if (fold.getCards().size() > 1) {
+				fold.setPlayedColor(fold.getCards().get(1).getColor());
+			} else {
+				fold.setPlayedColor(Color.AUTRE);
+			}
+		}
 		// The player is the FIRST player, no restriction on his played card.
-		if (fold.isEmpty()) {
+		if (fold.getCards().isEmpty()) {
 			// Choose a random card
 			card = selectFirstCardToPlay(done, player, playerHand, fold, previousFolds);
+			fold.setPlayedColor(card.getColor());
 		} else {
 			Color foldColor = Color.CARREAU;
 			// The first card is the WildCard
-			if (fold.get(0).getColor() == Color.AUTRE) {
+			if (fold.getCards().get(0).getColor() == Color.AUTRE) {
 				// The player can choose the card color(Wild Card has been
 				// played first, and the player has to play immediately later.
 				// No restriction on the card color he wants to play
-				if (fold.size() == 1) {
+				if (fold.getCards().size() == 1) {
 					card = selectColorCardToPlay(done, player, playerHand, fold, previousFolds);
+					fold.setPlayedColor(card.getColor());
 				} else {
-					foldColor = fold.get(1).getColor();
+					foldColor = fold.getCards().get(1).getColor();
+					fold.setPlayedColor(foldColor);
 				}
 			} else {
-				foldColor = fold.get(0).getColor();
+				foldColor = fold.getCards().get(0).getColor();
 			}
 			if (card == null) {
 				// select a random card from the correct color.
@@ -72,14 +92,14 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			}
 		}
 		// Add card to fold.
-		fold.add(card);
+		fold.getCards().add(card);
 		// remove card from player's hand
 		playerHand.remove(card);
 		return card;
 	}
 
-	private Card selectFirstCardToPlay(Done done, Player player, List<Card> playerHand, List<Card> fold,
-			List<Card> previousFolds) {
+	private Card selectFirstCardToPlay(Done done, Player player, List<Card> playerHand, Fold fold,
+			List<Fold> previousFolds) {
 		Card card = null;
 		List<Card> excuse = playerHand.stream().filter(c -> c.getColor() == Color.AUTRE).collect(Collectors.toList());
 
@@ -114,28 +134,33 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 				List<Card> colorCards = playerHand.stream().filter(c -> c.getColor() == color)
 						.collect(Collectors.toList());
 				for (Card colorCard : colorCards) {
-					if (opener){
+					if (opener) {
 						// If the player want to open, try to not give points
-						//FIXME: if the player's cut has already been found, we could perhaps play a king ...
+						// FIXME: if the player's cut has already been found, we
+						// could perhaps play a king ...
 						if (colorCard.getPointsValue() == 0.5) {
 							interestingCards.add(colorCard);
 						}
 					} else {
-						// We don't want to open, so play a little card or the masterCard if in hand
-						if (isMasterCardWithOldFolds(colorCard, previousFolds, done) || colorCard.getPointsValue() == 0.5){
+						// We don't want to open, so play a little card or the
+						// masterCard if in hand
+						if (foldControlServices.isCardMostPowerful(previousFolds, colorCard, done)
+								|| colorCard.getPointsValue() == 0.5) {
 							interestingCards.add(colorCard);
 						}
 					}
 				}
 			}
-			if (interestingCards.isEmpty()){
-				// Quite bad but nothing is interesting to play ... so select a random Card in no values cards (if exists ...)
-				interestingCards = playerHand.stream().filter(c->c.getPointsValue() == 0.5).collect(Collectors.toList());
-				if (interestingCards.isEmpty()){
+			if (interestingCards.isEmpty()) {
+				// Quite bad but nothing is interesting to play ... so select a
+				// random Card in no values cards (if exists ...)
+				interestingCards = playerHand.stream().filter(c -> c.getPointsValue() == 0.5)
+						.collect(Collectors.toList());
+				if (interestingCards.isEmpty()) {
 					interestingCards = playerHand;
 				}
 			}
-			int cardIndex = (int)(Math.random() * interestingCards.size());
+			int cardIndex = (int) (Math.random() * interestingCards.size());
 			card = interestingCards.get(cardIndex);
 		}
 		return card;
@@ -158,8 +183,8 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		allColors.add(Color.CARREAU);
 		allColors.add(Color.TREFLE);
 		for (Player player : done.getPlayers()) {
-			for (List<Card> folds : player.getFolds()) {
-				allColors.remove(folds.get(0).getColor());
+			for (Fold fold : player.getFolds()) {
+				allColors.remove(fold.getPlayedColor());
 			}
 		}
 		return allColors;
@@ -177,7 +202,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 	 *            the current fold
 	 * @return the other players order
 	 */
-	private List<Player> getPlayersOrder(Done done, Player player, List<Card> currentFold) {
+	private List<Player> getPlayersOrder(Done done, Player player, Fold currentFold) {
 		List<Player> players = new ArrayList<>();
 		final List<Player> donePlayers = done.getPlayers();
 		int playerIndex = 0;
@@ -192,13 +217,13 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			players.add(donePlayers.get((i + playerIndex) % donePlayers.size()));
 		}
 		// Remove already played players
-		currentFold.stream().forEach(e -> players.remove(e));
+		currentFold.getCards().stream().forEach(e -> players.remove(e));
 		return players;
 	}
 
-	private boolean isTheTeamWinning(List<Card> fold, List<Card> allFolds, Player player, Done done) {
+	private boolean isTheTeamWinning(Fold fold, List<Fold> allFolds, Player player, Done done) {
 		boolean winning = false;
-		if (!fold.isEmpty()) {
+		if (!fold.getCards().isEmpty()) {
 			// Did the team are known ?
 			Team playerTeam = getTeam(player);
 			if (playerTeam != Team.UNKNOWN) {
@@ -206,7 +231,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 				boolean alreadyPlayed = false;
 				List<Card> teammateCards = new ArrayList<>();
 				// Check each card owner's team
-				for (Card playedCard : fold) {
+				for (Card playedCard : fold.getCards()) {
 					Team cardTeam = playedCard.getOwner().getTeam();
 					if (cardTeam == playerTeam && cardTeam != Team.UNKNOWN) {
 						alreadyPlayed = true;
@@ -215,7 +240,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 				}
 				if (alreadyPlayed) {
 					for (Card card : teammateCards) {
-						if (isMasterCardWithCurrentFold(card, fold) && isMasterCardWithOldFolds(card, allFolds, done)) {
+						if (foldControlServices.canCardWinFold(fold, card) && foldControlServices.isCardMostPowerful(allFolds, card, done)) {
 							winning = true;
 						}
 					}
@@ -233,11 +258,10 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return player.getTeam();
 	}
 
-	private Card selectRandomAtout(Done done, Player player, List<Card> cards, List<Card> fold,
-			List<Card> previousFolds) {
+	private Card selectRandomAtout(Done done, Player player, List<Card> cards, Fold fold, List<Fold> previousFolds) {
 		Card card = null;
 		int mostPowerfullCard = 0;
-		for (Card foldCard : fold) {
+		for (Card foldCard : fold.getCards()) {
 			if (foldCard.getName().getPower() > mostPowerfullCard) {
 				mostPowerfullCard = foldCard.getName().getPower();
 			}
@@ -273,23 +297,24 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return randomCard;
 	}
 
-	private Card selectColorCardToPlay(Done done, Player player, List<Card> cards, List<Card> fold,
-			List<Card> previousFolds) {
+	private Card selectColorCardToPlay(Done done, Player player, List<Card> cards, Fold fold,
+			List<Fold> previousFolds) {
 		Card randomCard = null;
-		// Before the last turn, if the player has the excuse, play it to avoid to loose it
-		if (cards.size() == 2 && cards.stream().filter(c->c.getColor() == Color.AUTRE).count() == 1){
-			randomCard = cards.stream().filter(c->c.getColor() == Color.AUTRE).collect(Collectors.toList()).get(0);
+		// Before the last turn, if the player has the excuse, play it to avoid
+		// to loose it
+		if (cards.size() == 2 && cards.stream().filter(c -> c.getColor() == Color.AUTRE).count() == 1) {
+			randomCard = cards.stream().filter(c -> c.getColor() == Color.AUTRE).collect(Collectors.toList()).get(0);
 		}
 		// If the player play at the last position, and there is no cut, he can
 		// play his strongest card if he could win
 		else if (isTeamPlayTheLast(done, fold, player)
-				&& fold.stream().filter(c -> c.getColor() == Color.ATOUT).count() == 0) {
+				&& fold.getCards().stream().filter(c -> c.getColor() == Color.ATOUT).count() == 0) {
 			// We would like to play the most powerful card if
 			// - this card is the master card in the current fold
 			// - the team is winning and the player can give some points (if
 			// there is no points to give, it is better to keep "most powerful"
 			// cards)
-			if (isMasterCardWithCurrentFold(cards.get(cards.size() - 1), fold)
+			if (foldControlServices.canCardWinFold(fold, cards.get(cards.size() - 1))
 					|| (isTheTeamWinning(fold, previousFolds, player, done)
 							&& cards.get(cards.size() - 1).getPointsValue() > 0.5)) {
 				randomCard = cards.get(cards.size() - 1);
@@ -304,7 +329,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			// - the card is master in his color (a King, or a Queen if the King
 			// is already passed, ...)
 			// - the team is winning the fold and the player has points to give
-			if (isMasterCardWithOldFolds(cards.get(cards.size() - 1), previousFolds, done)
+			if (foldControlServices.isCardMostPowerful(previousFolds, cards.get(cards.size() - 1), done)
 					|| (isTheTeamWinning(fold, previousFolds, player, done)
 							&& cards.get(cards.size() - 1).getPointsValue() > 0.5)) {
 				// If the player plays at the first position, it could be
@@ -325,7 +350,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return randomCard;
 	}
 
-	boolean isTeamPlayTheLast(Done done, List<Card> fold, Player player) {
+	boolean isTeamPlayTheLast(Done done, Fold fold, Player player) {
 		boolean theLast = false;
 		// We can't take a risk if we don't play at the last position so we have
 		// to be sure of the scenario.
@@ -340,13 +365,13 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		if (getTeam(player) == Team.UNKNOWN
 				|| (done.getPlayers().stream().filter(p -> p.getTeam() == Team.UNKNOWN).count() != 0
 						&& getTeam(player) == Team.ATTACK)) {
-			theLast = fold.size() == done.getPlayers().size() - 1;
+			theLast = fold.getCards().size() == done.getPlayers().size() - 1;
 		} else {
 			// The team are known
 			int otherTeamMatesNumber = (int) done.getPlayers().stream().filter(e -> e.getTeam() != getTeam(player))
 					.count();
 			int otherTeamMatesCard = 0;
-			for (Card card : fold) {
+			for (Card card : fold.getCards()) {
 				if (card.getOwner().getTeam() != getTeam(player)) {
 					otherTeamMatesCard++;
 				}
@@ -356,91 +381,6 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			theLast = otherTeamMatesCard == otherTeamMatesNumber;
 		}
 		return theLast;
-	}
-
-	/**
-	 * Checks if given Card is the master card with old folds.
-	 *
-	 * @param wantedCard
-	 *            the wanted card
-	 * @param foldedCards
-	 *            the folded cards
-	 * @return true, if is master card with old folds
-	 */
-	boolean isMasterCardWithOldFolds(Card wantedCard, List<Card> foldedCards, Done done) {
-		boolean good = false;
-		List<Name> remainingNames = getRemainingColorCards(foldedCards, wantedCard.getColor());
-		boolean powerful = remainingNames.get(remainingNames.size() - 1).getPower() == wantedCard.getName().getPower();
-		boolean isCuts = false;
-		for (Player player : done.getPlayers()){
-			for (List<Card> cards : player.getFolds()){
-				if (cards.get(0).getColor() == wantedCard.getColor() && cards.stream().filter(c->c.getColor() == Color.ATOUT).count() != 0){
-					isCuts = true;
-				}
-			}
-		}
-		return good && !isCuts;
-	}
-
-	/**
-	 * Checks if the given card could win the fold. (no matter if an adversary
-	 * is playing later in the current fold)
-	 *
-	 * @param wantedCard
-	 *            the wanted card
-	 * @param fold
-	 *            the fold
-	 * @return true, if is master card with current fold
-	 */
-	boolean isMasterCardWithCurrentFold(Card wantedCard, List<Card> fold) {
-		boolean good = false;
-		int highestValue = 0;
-		Card strongestCard = null;
-		for (Card card : fold) {
-			if (card.getName().getPower() > highestValue) {
-				highestValue = card.getName().getPower();
-				strongestCard = card;
-			}
-		}
-		if (strongestCard == null) {
-			good = true;
-		} else {
-			good = wantedCard.getName().getPower() >= strongestCard.getName().getPower();
-		}
-		return good;
-	}
-
-	/**
-	 * Gets the remaining color cards. Will use the previous folds to remove
-	 * passed cards. Could be very useful to know what is already passed in this
-	 * color, and what is not.
-	 *
-	 * @param foldedCards
-	 *            the folded cards
-	 * @param selectedColor
-	 *            the selected color
-	 * @return the remaining color cards
-	 */
-	List<Name> getRemainingColorCards(List<Card> foldedCards, Color selectedColor) {
-		List<Name> values = new ArrayList<>();
-		values.add(Name.AS);
-		values.add(Name.DEUX);
-		values.add(Name.TROIS);
-		values.add(Name.QUATRE);
-		values.add(Name.CINQ);
-		values.add(Name.SIX);
-		values.add(Name.SEPT);
-		values.add(Name.HUIT);
-		values.add(Name.NEUF);
-		values.add(Name.DIX);
-		values.add(Name.VALET);
-		values.add(Name.CAVALIER);
-		values.add(Name.DAME);
-		values.add(Name.ROI);
-		List<Name> remainingCards = new ArrayList<>();
-		foldedCards.stream().filter(e -> e.getColor() == selectedColor).forEach(e -> remainingCards.add(e.getName()));
-		values.removeIf(e -> remainingCards.contains(e));
-		return values;
 	}
 
 }

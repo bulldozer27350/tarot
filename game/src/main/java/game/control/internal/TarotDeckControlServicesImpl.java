@@ -6,17 +6,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import game.control.DoneControlServices;
+import game.control.FoldControlServices;
 import game.control.PlayerControlServices;
 import game.control.TarotDeckControlServices;
 import game.domain.Card;
 import game.domain.Card.Color;
 import game.domain.Done;
+import game.domain.Fold;
 import game.domain.Player;
 
 public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 
-	private DoneControlServices doneControlServices;
-	private PlayerControlServices playerControlServices;
+	private final DoneControlServices doneControlServices;
+	private final PlayerControlServices playerControlServices;
+	private final FoldControlServices foldControlServices;
 
 	public static final Card EXCUSE = new Card(Card.Color.AUTRE, Card.Name.EXCUSE, 4.5, null);
 
@@ -103,9 +106,10 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 	public static final Card ROI_TREFLE = new Card(Card.Color.TREFLE, Card.Name.ROI, 4.5, null);
 
 	public TarotDeckControlServicesImpl(PlayerControlServices playerControlServicesArg,
-			DoneControlServices doneControlServicesArg) {
+			DoneControlServices doneControlServicesArg, FoldControlServices foldControlServicesArg) {
 		this.doneControlServices = doneControlServicesArg;
 		this.playerControlServices = playerControlServicesArg;
+		this.foldControlServices = foldControlServicesArg;
 	}
 
 	@Override
@@ -368,15 +372,15 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 
 	@Override
 	public void play(Done done) {
-		List<Card> fold = new ArrayList<>();
-		List<Card> previousFold = new ArrayList<>();
-		List<Card> previousFolds = new ArrayList<>();
+		Fold fold = new Fold();
+		Fold previousFold = new Fold();
+		List<Fold> previousFolds = new ArrayList<>();
 		int neededFoldNumber = done.getPlayers().get(0).getHand().size();
 		int playersNumber = done.getPlayers().size();
 		for (int i = 0; i < neededFoldNumber; i++) {
 			previousFold = fold;
-			fold = new ArrayList<>();
-			previousFolds.addAll(fold);
+			fold = new Fold();
+			previousFolds.add(fold);
 			for (int j = 0; j < playersNumber; j++) {
 				Card playCard = playerControlServices.playCard(done, getNextPlayer(done, fold, previousFold), fold,
 						previousFolds);
@@ -384,16 +388,16 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 			}
 			System.out.println("");
 		}
-		whoWon(fold);
+		this.foldControlServices.computeWinner(fold);
 	}
 
-	private Player getNextPlayer(Done done, List<Card> fold, List<Card> previousFold) {
+	private Player getNextPlayer(Done done, Fold fold, Fold previousFold) {
 		Player nextPlayer = null;
 		// if the fold over
-		if (!fold.isEmpty()) {
+		if (!fold.getCards().isEmpty()) {
 			// We have to find last player index (fold's latest added card's
 			// owner)
-			Card latestCard = fold.get(fold.size() - 1);
+			Card latestCard = fold.getCards().get(fold.getCards().size() - 1);
 			Player latestPlayer = latestCard.getOwner();
 			int index = 0;
 			for (int i = 0; i < done.getPlayers().size(); i++) {
@@ -403,34 +407,17 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 			}
 			// We have found the latest player. The next one is i++%player size.
 			nextPlayer = done.getPlayers().get((index + 1) % done.getPlayers().size());
-		} else if (previousFold.isEmpty()) {
+		} else if (previousFold.getCards().isEmpty()) {
 			nextPlayer = done.getNextPlayer();
 		} else {
+			foldControlServices.computeWinner(previousFold);
 			// the fold is over, the next player is the fold winner
-			nextPlayer = this.whoWon(previousFold);
+			nextPlayer = previousFold.getWinner();
 			done.setNextPlayer(nextPlayer);
 		}
 
 		return nextPlayer;
 	}
 
-	private Player whoWon(List<Card> fold) {
-		int highestValue = 0;
-		Color foldColor = fold.get(0).getColor();
-		if (foldColor == Color.AUTRE) {
-			foldColor = fold.get(1).getColor();
-		}
-		Card strongestCard = null;
-		for (Card card : fold) {
-			if (card.getName().getPower() > highestValue
-					&& (card.getColor() == foldColor || card.getColor() == Color.ATOUT)) {
-				highestValue = card.getName().getPower();
-				strongestCard = card;
-			}
-		}
-		Player owner = strongestCard.getOwner();
-		owner.getFolds().add(fold);
-		return owner;
-	}
 
 }

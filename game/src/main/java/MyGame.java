@@ -7,6 +7,7 @@ import game.control.DoneControlServices;
 import game.control.GameControlServices;
 import game.domain.Card;
 import game.domain.Done;
+import game.domain.Fold;
 import game.domain.Player;
 import game.domain.Player.Team;
 
@@ -88,12 +89,12 @@ public class MyGame {
 			List<Player> attackPlayers = new ArrayList<>();
 			for (Player player : done.getPlayers().stream().filter(e->e.getTeam() == Team.ATTACK).collect(Collectors.toList())){
 				attackPlayers.add(player);
-				for (List<Card> fold : player.getFolds()){
-					List<Card> playerFold = new ArrayList<>(fold);
+				for (Fold fold : player.getFolds()){
+					List<Card> playerFold = new ArrayList<>(fold.getCards());
 					for (int i = 0 ; i < playerFold.size() ; i++){
-						Card card = fold.get(0);
+						Card card = fold.getCards().get(0);
 						score += card.getPointsValue();
-						doneCards.add(fold.remove(0));
+						doneCards.add(fold.getCards().remove(0));
 					}
 				}
 			}
@@ -104,12 +105,12 @@ public class MyGame {
 			List<Player> defensePlayers = new ArrayList<>();
 			for (Player player : done.getPlayers().stream().filter(e->e.getTeam() == Team.DEFENSE).collect(Collectors.toList())){
 				defensePlayers.add(player);
-				for (List<Card> fold : player.getFolds()){
-					List<Card> playerFold = new ArrayList<>(fold);
+				for (Fold fold : player.getFolds()){
+					List<Card> playerFold = new ArrayList<>(fold.getCards());
 					for (int i = 0 ; i < playerFold.size() ; i++){
-						Card card = fold.get(0);
+						Card card = fold.getCards().get(0);
 						score += card.getPointsValue();
-						doneCards.add(fold.remove(0));
+						doneCards.add(fold.getCards().remove(0));
 					}
 				}
 			}

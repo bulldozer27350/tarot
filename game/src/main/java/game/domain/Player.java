@@ -8,7 +8,7 @@ public class Player {
 	public enum Team {ATTACK, DEFENSE, UNKNOWN}
 	
 	private List<Card> hand = new ArrayList<>();
-	private List<List<Card>> folds= new ArrayList<>();
+	private List<Fold> folds= new ArrayList<>();
 	private String name;
 	private Team team;
 
@@ -27,11 +27,11 @@ public class Player {
 		this.hand = hand;
 	}
 	
-	public List<List<Card>> getFolds() {
+	public List<Fold> getFolds() {
 		return folds;
 	}
 	
-	public void setFolds(List<List<Card>> folds) {
+	public void setFolds(List<Fold> folds) {
 		this.folds = folds;
 	}
 

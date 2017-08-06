@@ -1,126 +1,18 @@
 package game.control.internal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import game.domain.Card;
-import game.domain.Card.Color;
-import game.domain.Card.Name;
 import game.domain.Done;
+import game.domain.Fold;
 import game.domain.Player;
 import game.domain.Player.Team;
 
 public class PlayerControlServicesTest {
 
-	@Test
-	public void testGetRemainingColorCards() {
-		// Given
-		Color carreau = Color.CARREAU;
-		Color coeur = Color.COEUR;
-		Color trefle = Color.TREFLE;
-
-		List<Card> fold = new ArrayList<>();
-		fold.add(TarotDeckControlServicesImpl.ROI_COEUR);
-		fold.add(TarotDeckControlServicesImpl.ROI_CARREAU);
-		fold.add(TarotDeckControlServicesImpl.DAME_COEUR);
-		fold.add(TarotDeckControlServicesImpl.DIX_COEUR);
-		fold.add(TarotDeckControlServicesImpl.CINQ_COEUR);
-		fold.add(TarotDeckControlServicesImpl.TROIS_COEUR);
-		fold.add(TarotDeckControlServicesImpl.DEUX_COEUR);
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
-
-		// When
-		List<Card.Name> remaingingCards = playerControlServices.getRemainingColorCards(fold, carreau);
-
-		// Then
-		Assert.assertEquals(13, remaingingCards.size());
-
-		// When
-		remaingingCards = playerControlServices.getRemainingColorCards(fold, coeur);
-
-		// Then
-		Assert.assertEquals(8, remaingingCards.size());
-		Assert.assertFalse(remaingingCards.contains(Name.ROI));
-		Assert.assertFalse(remaingingCards.contains(Name.DAME));
-		Assert.assertFalse(remaingingCards.contains(Name.DIX));
-		Assert.assertFalse(remaingingCards.contains(Name.CINQ));
-		Assert.assertFalse(remaingingCards.contains(Name.TROIS));
-		Assert.assertFalse(remaingingCards.contains(Name.DEUX));
-
-		// When
-		remaingingCards = playerControlServices.getRemainingColorCards(fold, trefle);
-
-		// Then
-		Assert.assertEquals(14, remaingingCards.size());
-	}
-
-	@Test
-	public void testIsMasterCardWithOldFolds() {
-		// Given
-		List<Card> fold = new ArrayList<>();
-		fold.add(TarotDeckControlServicesImpl.ROI_COEUR);
-		fold.add(TarotDeckControlServicesImpl.ROI_CARREAU);
-		fold.add(TarotDeckControlServicesImpl.DAME_COEUR);
-		fold.add(TarotDeckControlServicesImpl.DIX_COEUR);
-		fold.add(TarotDeckControlServicesImpl.CINQ_COEUR);
-		fold.add(TarotDeckControlServicesImpl.TROIS_COEUR);
-		fold.add(TarotDeckControlServicesImpl.DEUX_COEUR);
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
-		Done done = new Done();
-
-		// When
-		boolean master = playerControlServices.isMasterCardWithOldFolds(TarotDeckControlServicesImpl.CAVALIER_COEUR,
-				fold, done);
-
-		// Then
-		Assert.assertTrue(master);
-
-		// When we want to check if the already passed card is stayed master
-		master = playerControlServices.isMasterCardWithOldFolds(TarotDeckControlServicesImpl.ROI_COEUR, fold, done);
-
-		// Then it is false
-		Assert.assertFalse(master);
-
-		// When
-		master = playerControlServices.isMasterCardWithOldFolds(TarotDeckControlServicesImpl.VALET_COEUR, fold, done);
-
-		// Then it is false (Cavalier is not yet passed
-		Assert.assertFalse(master);
-	}
-
-	@Test
-	public void testIsMasterCardWithCurrentFold() {
-		// Given
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
-
-		// When
-		boolean winFold = playerControlServices.isMasterCardWithCurrentFold(TarotDeckControlServicesImpl.CINQ_PIQUE, Arrays.asList(TarotDeckControlServicesImpl.DEUX_PIQUE));
-		
-		// Then
-		Assert.assertTrue(winFold);
-		
-		// When
-		winFold = playerControlServices.isMasterCardWithCurrentFold(TarotDeckControlServicesImpl.CINQ_PIQUE, Arrays.asList(TarotDeckControlServicesImpl.SIX_PIQUE));
-		
-		// Then
-		Assert.assertFalse(winFold);
-		
-		// When
-		winFold = playerControlServices.isMasterCardWithCurrentFold(TarotDeckControlServicesImpl.CINQ_PIQUE, Arrays.asList(TarotDeckControlServicesImpl.DEUX_PIQUE, TarotDeckControlServicesImpl.SIX_PIQUE, TarotDeckControlServicesImpl.TROIS_PIQUE));
-		
-		// Then
-		Assert.assertFalse(winFold);
-		
-		// When
-		winFold = playerControlServices.isMasterCardWithCurrentFold(TarotDeckControlServicesImpl.CINQ_PIQUE, new ArrayList<>());
-		
-		// Then
-		Assert.assertTrue(winFold);
-	}
 	
 	@Test
 	public void testIsTeamPlayTheLast(){
@@ -151,7 +43,7 @@ public class PlayerControlServicesTest {
 		done.getPlayers().addAll(Arrays.asList(attackPlayer2, unknownPlayer2, unknownPlayer1, unknownPlayer3, unknownPlayer4));
 		done2.getPlayers().addAll(Arrays.asList(attackPlayer1, attackPlayer2, defensePlayer1, defensePlayer2, defensePlayer3));
 		
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
+		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl(null);
 		
 		Card unknownCard1 = new Card();
 		unknownCard1.setOwner(unknownPlayer1);
@@ -172,55 +64,80 @@ public class PlayerControlServicesTest {
 		Card defenseCard3 = new Card();
 		defenseCard3.setOwner(defensePlayer3);
 		
+		Fold fold1 = new Fold();
+		fold1.getCards().addAll(Arrays.asList(unknownCard1));
+		
+		Fold fold2 = new Fold();
+		fold2.getCards().addAll(Arrays.asList(unknownCard1, attackCard1));
+		
+		Fold fold3 = new Fold();
+		fold3.getCards().addAll(Arrays.asList(unknownCard1, attackCard1, unknownCard2));
+		
+		Fold fold4 = new Fold();
+		fold4.getCards().addAll(Arrays.asList(unknownCard1, attackCard1, unknownCard2, unknownCard3));
+
+		Fold fold5 = new Fold();
+		fold5.getCards().addAll(Arrays.asList(attackCard1));
+		
+		Fold fold6 = new Fold();
+		fold6.getCards().addAll(Arrays.asList(attackCard1, defenseCard1));
+		
+		Fold fold7 = new Fold();
+		fold7.getCards().addAll(Arrays.asList(attackCard1, defenseCard1, attackCard2));
+		
+		Fold fold8 = new Fold();
+		fold8.getCards().addAll(Arrays.asList(attackCard1, defenseCard1, attackCard2, defenseCard2));
+		
+		
 		// When
-		boolean lastTeam = playerControlServices.isTeamPlayTheLast(done, new ArrayList<>(), unknownPlayer1);
+		boolean lastTeam = playerControlServices.isTeamPlayTheLast(done, new Fold(), unknownPlayer1);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done, Arrays.asList(unknownCard1), attackPlayer1);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done, fold1, attackPlayer1);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done, Arrays.asList(unknownCard1, attackCard1), unknownPlayer2);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done, fold2, unknownPlayer2);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done, Arrays.asList(unknownCard1, attackCard1, unknownCard2), unknownPlayer3);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done, fold3, unknownPlayer3);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done, Arrays.asList(unknownCard1, attackCard1, unknownCard2, unknownCard3), unknownPlayer4);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done, fold4, unknownPlayer4);
 		// Then
 		Assert.assertTrue(lastTeam);
 		
 		// Done2 is for 5 players : 2 in attack, 3 in defense
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done2, new ArrayList<>(), attackPlayer1);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done2, new Fold(), attackPlayer1);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done2, Arrays.asList(attackCard1), defensePlayer1);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done2, fold5, defensePlayer1);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done2, Arrays.asList(attackCard1, defenseCard1), attackPlayer1);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done2, fold6, attackPlayer1);
 		// Then
 		Assert.assertFalse(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done2, Arrays.asList(attackCard1, defenseCard1, attackCard2), defensePlayer2);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done2, fold7, defensePlayer2);
 		// Then
 		Assert.assertTrue(lastTeam);
 		
 		// When
-		lastTeam = playerControlServices.isTeamPlayTheLast(done2, Arrays.asList(attackCard1, defenseCard1, attackCard2, defenseCard2), defensePlayer3);
+		lastTeam = playerControlServices.isTeamPlayTheLast(done2, fold8, defensePlayer3);
 		// Then
 		Assert.assertTrue(lastTeam);
 	}
@@ -230,7 +147,7 @@ public class PlayerControlServicesTest {
 		// Given
 		Player player = new Player();
 		Card card = new Card();
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
+		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl(null);
 		
 		// When
 		playerControlServices.addHand(player, card);
@@ -243,21 +160,21 @@ public class PlayerControlServicesTest {
 	@Test
 	public void addFold(){
 		// Given
-		List<Card> cards = new ArrayList<>();
+		Fold fold = new Fold();
 		final Card card1 = new Card();
 		final Card card2 = new Card();
-		cards.add(card1);
-		cards.add(card2);
+		fold.getCards().add(card1);
+		fold.getCards().add(card2);
 		Player player = new Player();
-		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl();
+		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl(null);
 		
 		// When
-		playerControlServices.addFold(player, cards);
+		playerControlServices.addFold(player, fold);
 		
 		// Then
 		Assert.assertEquals(1, player.getFolds().size());
-		Assert.assertEquals(2, player.getFolds().get(0).size());
-		Assert.assertTrue(player.getFolds().get(0).contains(card1));
-		Assert.assertTrue(player.getFolds().get(0).contains(card2));
+		Assert.assertEquals(2, player.getFolds().get(0).getCards().size());
+		Assert.assertTrue(player.getFolds().get(0).getCards().contains(card1));
+		Assert.assertTrue(player.getFolds().get(0).getCards().contains(card2));
 	}
 }
