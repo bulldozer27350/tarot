@@ -4,43 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Done {
-	
-	private List<Card> cards = new ArrayList<>();
-	private List<Card> dog = new ArrayList<>();
-	private List<Player> players = new ArrayList<>();
-	private Player nextPlayer;
 
-	public List<Card> getCards() {
-		return cards;
-	}
+    private List<Card> cards = new ArrayList<>();
+    private List<Card> dog = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
+    private Player nextPlayer;
+    private List<Fold> folds = new ArrayList<>();
 
-	public void setCards(List<Card> cards) {
-		this.cards = cards;
-	}
+    public List<Card> getCards() {
+	return this.cards;
+    }
 
-	public List<Player> getPlayers() {
-		return players;
-	}
+    public void setCards(final List<Card> cards) {
+	this.cards = cards;
+    }
 
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
+    public List<Player> getPlayers() {
+	return this.players;
+    }
 
-	public List<Card> getDog() {
-		return dog;
-	}
+    public void setPlayers(final List<Player> players) {
+	this.players = players;
+    }
 
-	public void setDog(List<Card> dog) {
-		this.dog = dog;
-	}
+    public List<Card> getDog() {
+	return this.dog;
+    }
 
-	public Player getNextPlayer() {
-		return this.nextPlayer;
-	}
-	
-	public void setNextPlayer(game.domain.Player nextPlayer) {
-		this.nextPlayer = nextPlayer;
-	}
-	
-	
+    public void setDog(final List<Card> dog) {
+	this.dog = dog;
+    }
+
+    public Player getNextPlayer() {
+	return this.nextPlayer;
+    }
+
+    public void setNextPlayer(final game.domain.Player nextPlayer) {
+	this.nextPlayer = nextPlayer;
+    }
+
+    public List<Fold> getFolds() {
+	return this.folds;
+    }
+
+    public void setFolds(final List<Fold> folds) {
+	this.folds = folds;
+    }
+
 }

@@ -6,6 +6,7 @@ import game.domain.Card;
 import game.domain.Card.Color;
 import game.domain.Done;
 import game.domain.Fold;
+import game.domain.Player;
 
 public interface FoldControlServices {
 
@@ -24,5 +25,7 @@ public interface FoldControlServices {
 	 */
 	public boolean canCardWinFold(Fold fold, Card card);
 	public boolean isCardMostPowerful(List<Fold> folds, Card card, Done done);
+	public List<Player> getPlayersOrder(Done done, Player player, Fold currentFold);
+	public boolean canGivePoints(Fold fold, Player player, Done done);
 	
 }
