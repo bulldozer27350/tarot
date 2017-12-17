@@ -20,7 +20,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		Card strongestCard = null;
 		for (Card card : fold.getCards()) {
 			if (card.getName().getPower() > highestValue
-					&& (card.getColor() == fold.getPlayedColor() || card.getColor() == Color.ATOUT)) {
+					&& (card.getColor() == fold.getPlayedColor() || card.getColor() == Color.TRUMP)) {
 				highestValue = card.getName().getPower();
 				strongestCard = card;
 			}
@@ -37,7 +37,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		Card strongestCard = null;
 		for (Card card : fold.getCards()) {
 			if (card.getName().getPower() > highestValue
-					&& (card.getColor() == fold.getPlayedColor() || card.getColor() == Color.ATOUT)) {
+					&& (card.getColor() == fold.getPlayedColor() || card.getColor() == Color.TRUMP)) {
 				highestValue = card.getName().getPower();
 				strongestCard = card;
 			}
@@ -46,7 +46,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 			good = true;
 		} else {
 			good = wantedCard.getName().getPower() >= strongestCard.getName().getPower()
-					&& (wantedCard.getColor() == fold.getPlayedColor() || wantedCard.getColor() == Color.ATOUT);
+					&& (wantedCard.getColor() == fold.getPlayedColor() || wantedCard.getColor() == Color.TRUMP);
 		}
 		return good;
 	}
@@ -70,7 +70,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 			for (Player player : done.getPlayers()) {
 				for (Fold fold : player.getFolds()) {
 					if (fold.getPlayedColor() == wantedCard.getColor()
-							&& fold.getCards().stream().filter(c -> c.getColor() == Color.ATOUT).count() != 0) {
+							&& fold.getCards().stream().filter(c -> c.getColor() == Color.TRUMP).count() != 0) {
 						isCuts = true;
 					}
 				}
@@ -93,20 +93,20 @@ public class FoldControlServicesImpl implements FoldControlServices {
 	 */
 	List<Name> getRemainingCardsInGivenColor(List<Card> foldedCards, Color selectedColor) {
 		List<Name> values = new ArrayList<>();
-		values.add(Name.AS);
-		values.add(Name.DEUX);
-		values.add(Name.TROIS);
-		values.add(Name.QUATRE);
-		values.add(Name.CINQ);
+		values.add(Name.ACE);
+		values.add(Name.TWO);
+		values.add(Name.THREE);
+		values.add(Name.FOUR);
+		values.add(Name.FIVE);
 		values.add(Name.SIX);
-		values.add(Name.SEPT);
-		values.add(Name.HUIT);
-		values.add(Name.NEUF);
-		values.add(Name.DIX);
-		values.add(Name.VALET);
-		values.add(Name.CAVALIER);
-		values.add(Name.DAME);
-		values.add(Name.ROI);
+		values.add(Name.SEVEN);
+		values.add(Name.EIGHT);
+		values.add(Name.NINE);
+		values.add(Name.TEN);
+		values.add(Name.JACK);
+		values.add(Name.HORSEMAN);
+		values.add(Name.QUEEN);
+		values.add(Name.KING);
 		List<Name> remainingCards = new ArrayList<>();
 		foldedCards.stream().filter(e -> e.getColor() == selectedColor).forEach(e -> remainingCards.add(e.getName()));
 		values.removeIf(e -> remainingCards.contains(e));
@@ -151,7 +151,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		if (fold.getCards().isEmpty()) {
 			throw new UnsupportedOperationException("To know if we can give points, we must have a not empty fold !");
 		}
-		if (fold.getCards().stream().filter(card -> card.getColor() == Color.ATOUT).count() != 0) {
+		if (fold.getCards().stream().filter(card -> card.getColor() == Color.TRUMP).count() != 0) {
 			// There is a cut. Is it possible to give points ?
 			// Who has the highest atout on the fold ?
 			List<Card> foldCards = new ArrayList<>(fold.getCards());
@@ -207,7 +207,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 	public void computeColor(Fold fold) {
 		Color foldColor = null;
 		if (!fold.getCards().isEmpty()) {
-			if (fold.getCards().get(0).getColor() != Color.AUTRE) {
+			if (fold.getCards().get(0).getColor() != Color.OTHER) {
 				foldColor = fold.getCards().get(0).getColor();
 			} else if (fold.getCards().size() > 1) {
 				foldColor = fold.getCards().get(1).getColor();

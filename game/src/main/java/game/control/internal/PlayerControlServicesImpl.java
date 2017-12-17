@@ -39,11 +39,11 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		final List<Card> playerHand = player.getHand();
 		if (fold.getCards().isEmpty()) {
 			fold.setPlayedColor(null);
-		} else if (fold.getCards().get(0).getColor() == Color.AUTRE) {
+		} else if (fold.getCards().get(0).getColor() == Color.OTHER) {
 			if (fold.getCards().size() > 1) {
 				fold.setPlayedColor(fold.getCards().get(1).getColor());
 			} else {
-				fold.setPlayedColor(Color.AUTRE);
+				fold.setPlayedColor(Color.OTHER);
 			}
 		}
 		// The player is the FIRST player, no restriction on his played card.
@@ -52,9 +52,9 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			card = this.selectFirstCardToPlay(done, player, playerHand, fold, previousFolds);
 			fold.setPlayedColor(card.getColor());
 		} else {
-			Color foldColor = Color.CARREAU;
+			Color foldColor = Color.DIAMOND;
 			// The first card is the WildCard
-			if (fold.getCards().get(0).getColor() == Color.AUTRE) {
+			if (fold.getCards().get(0).getColor() == Color.OTHER) {
 				// The player can choose the card color(Wild Card has been
 				// played first, and the player has to play immediately later.
 				// No restriction on the card color he wants to play
@@ -71,35 +71,35 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			if (card == null) {
 				// select a random card from the correct color.
 				final Color finalFoldColor = foldColor;
-				if (finalFoldColor != Color.ATOUT) {
-					// Atout is not fold color
+				if (finalFoldColor != Color.TRUMP) {
+					// trump is not fold color
 					List<Card> goodColorCards = playerHand.stream().filter(c -> c.getColor() == finalFoldColor)
 							.collect(Collectors.toList());
 					// Player doesn't have the good color anymore, he has to
-					// select an atout to cut
+					// select an trump to cut
 					if (goodColorCards.isEmpty()) {
-						goodColorCards = playerHand.stream().filter(c -> c.getColor() == Color.ATOUT)
+						goodColorCards = playerHand.stream().filter(c -> c.getColor() == Color.TRUMP)
 								.collect(Collectors.toList());
-						// If he has no more atout, he has to select a random
+						// If he has no more trump, he has to select a random
 						// card in his hand
 						if (goodColorCards.isEmpty()) {
 							goodColorCards = playerHand;
 							card = this.selectColorCardToPlay(done, player, goodColorCards, fold, previousFolds);
 						} else {
-							card = this.selectRandomAtout(done, player, playerHand, fold, previousFolds);
+							card = this.selectRandomTrump(done, player, playerHand, fold, previousFolds);
 						}
 					} else {
 						// he has the right color. Select a card in this color
 						card = this.selectColorCardToPlay(done, player, goodColorCards, fold, previousFolds);
 					}
 				} else {
-					List<Card> goodColorCards = playerHand.stream().filter(c -> c.getColor() == Color.ATOUT)
+					List<Card> goodColorCards = playerHand.stream().filter(c -> c.getColor() == Color.TRUMP)
 							.collect(Collectors.toList());
 					if (goodColorCards.isEmpty()) {
 						goodColorCards = playerHand;
 						card = this.selectColorCardToPlay(done, player, goodColorCards, fold, previousFolds);
 					} else {
-						card = this.selectRandomAtout(done, player, playerHand, fold, previousFolds);
+						card = this.selectRandomTrump(done, player, playerHand, fold, previousFolds);
 					}
 				}
 			}
@@ -114,7 +114,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 	private Card selectFirstCardToPlay(final Done done, final Player player, final List<Card> playerHand,
 			final Fold fold, final List<Fold> previousFolds) {
 		Card card = null;
-		final List<Card> excuse = playerHand.stream().filter(c -> c.getColor() == Color.AUTRE)
+		final List<Card> excuse = playerHand.stream().filter(c -> c.getColor() == Color.OTHER)
 				.collect(Collectors.toList());
 
 		// Particular case of Excuse
@@ -124,12 +124,12 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 			card = playerHand.get(0);
 		} else {
 			final Map<Color, Integer> colorCardsNumber = new HashMap<>();
-			colorCardsNumber.put(Color.ATOUT, 0);
-			colorCardsNumber.put(Color.AUTRE, 0);
-			colorCardsNumber.put(Color.PIQUE, 0);
-			colorCardsNumber.put(Color.COEUR, 0);
-			colorCardsNumber.put(Color.CARREAU, 0);
-			colorCardsNumber.put(Color.TREFLE, 0);
+			colorCardsNumber.put(Color.TRUMP, 0);
+			colorCardsNumber.put(Color.OTHER, 0);
+			colorCardsNumber.put(Color.SPADE, 0);
+			colorCardsNumber.put(Color.HEART, 0);
+			colorCardsNumber.put(Color.DIAMOND, 0);
+			colorCardsNumber.put(Color.CLUB, 0);
 			playerHand.stream()
 					.forEach(c -> colorCardsNumber.put(c.getColor(), colorCardsNumber.get(c.getColor()) + 1));
 			final List<Player> others = this.foldControlServices.getPlayersOrder(done, player, fold);
@@ -202,22 +202,22 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return card;
 	}
 
-	private List<Color> getAlreadyOpenedColors(final Done done) {
+	List<Color> getAlreadyOpenedColors(final Done done) {
 		final List<Color> allColors = new ArrayList<>();
-		allColors.add(Color.PIQUE);
-		allColors.add(Color.COEUR);
-		allColors.add(Color.CARREAU);
-		allColors.add(Color.TREFLE);
+		allColors.add(Color.SPADE);
+		allColors.add(Color.HEART);
+		allColors.add(Color.DIAMOND);
+		allColors.add(Color.CLUB);
 		allColors.removeAll(this.getNotYetOpenedColors(done));
 		return allColors;
 	}
 
-	private List<Color> getNotYetOpenedColors(final Done done) {
+	List<Color> getNotYetOpenedColors(final Done done) {
 		final List<Color> allColors = new ArrayList<>();
-		allColors.add(Color.PIQUE);
-		allColors.add(Color.COEUR);
-		allColors.add(Color.CARREAU);
-		allColors.add(Color.TREFLE);
+		allColors.add(Color.SPADE);
+		allColors.add(Color.HEART);
+		allColors.add(Color.DIAMOND);
+		allColors.add(Color.CLUB);
 		for (final Player player : done.getPlayers()) {
 			for (final Fold fold : player.getFolds()) {
 				allColors.remove(fold.getPlayedColor());
@@ -264,7 +264,7 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return player.getTeam();
 	}
 
-	private Card selectRandomAtout(final Done done, final Player player, final List<Card> cards, final Fold fold,
+	Card selectRandomTrump(final Done done, final Player player, final List<Card> cards, final Fold fold,
 			final List<Fold> previousFolds) {
 		Card card = null;
 		int mostPowerfullCard = 0;
@@ -273,33 +273,33 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 				mostPowerfullCard = foldCard.getName().getPower();
 			}
 		}
-		final List<Card> atouts = cards.stream().filter(c -> c.getColor() == Color.ATOUT).collect(Collectors.toList());
-		atouts.sort((c1, c2) -> c1.getName().getPower() - c2.getName().getPower());
-		for (final Card atout : atouts) {
-			if (atout.getName().getPower() > mostPowerfullCard) {
-				card = atout;
+		final List<Card> trumps = cards.stream().filter(c -> c.getColor() == Color.TRUMP).collect(Collectors.toList());
+		trumps.sort((c1, c2) -> c1.getName().getPower() - c2.getName().getPower());
+		for (final Card trump : trumps) {
+			if (trump.getName().getPower() > mostPowerfullCard) {
+				card = trump;
 				break;
 			}
 		}
-		// No stronger atout has been found.
+		// No stronger trump has been found.
 		if (card == null) {
-			if (atouts.isEmpty()) {
+			if (trumps.isEmpty()) {
 				card = this.selectColorCardToPlay(done, player, cards, fold, previousFolds);
 			} else {
-				card = this.selectColorCardToPlay(done, player, atouts, fold, previousFolds);
+				card = this.selectColorCardToPlay(done, player, trumps, fold, previousFolds);
 			}
 		}
 		return card;
 	}
 
-	private Card selectColorCardToPlay(final Done done, final Player player, final List<Card> cards, final Fold fold,
+	Card selectColorCardToPlay(final Done done, final Player player, final List<Card> cards, final Fold fold,
 			final List<Fold> previousFolds) {
 		Card randomCard = null;
 		// Before the last turn, if the player has the excuse, play it to avoid
 		// to loose it
-		if ((cards.size() == 2) && (cards.stream().filter(c -> c.getColor() == Color.AUTRE).count() == 1)) {
-			randomCard = cards.stream().filter(c -> c.getColor() == Color.AUTRE).collect(Collectors.toList()).get(0);
-		} else if (fold.getCards().stream().filter(c -> c.getColor() == Color.ATOUT).count() != 0) {
+		if ((cards.size() == 2) && (cards.stream().filter(c -> c.getColor() == Color.OTHER).count() == 1)) {
+			randomCard = cards.stream().filter(c -> c.getColor() == Color.OTHER).collect(Collectors.toList()).get(0);
+		} else if (fold.getCards().stream().filter(c -> c.getColor() == Color.TRUMP).count() != 0) {
 			// There is a cut.
 			if (this.foldControlServices.canGivePoints(fold, player, done)) {
 				randomCard = cards.get(cards.size() - 1);

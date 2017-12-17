@@ -20,9 +20,9 @@ public class FoldControlServicesTest {
 	@Test
 	public void testGetRemainingCardsInGivenColor() {
 		// Given
-		Color carreau = Color.CARREAU;
-		Color coeur = Color.COEUR;
-		Color trefle = Color.TREFLE;
+		Color carreau = Color.DIAMOND;
+		Color coeur = Color.HEART;
+		Color trefle = Color.CLUB;
 
 		List<Card> fold = new ArrayList<>();
 		fold.add(TarotDeckControlServicesImpl.ROI_COEUR);
@@ -45,12 +45,12 @@ public class FoldControlServicesTest {
 
 		// Then
 		Assert.assertEquals(8, remaingingCards.size());
-		Assert.assertFalse(remaingingCards.contains(Name.ROI));
-		Assert.assertFalse(remaingingCards.contains(Name.DAME));
-		Assert.assertFalse(remaingingCards.contains(Name.DIX));
-		Assert.assertFalse(remaingingCards.contains(Name.CINQ));
-		Assert.assertFalse(remaingingCards.contains(Name.TROIS));
-		Assert.assertFalse(remaingingCards.contains(Name.DEUX));
+		Assert.assertFalse(remaingingCards.contains(Name.KING));
+		Assert.assertFalse(remaingingCards.contains(Name.QUEEN));
+		Assert.assertFalse(remaingingCards.contains(Name.TEN));
+		Assert.assertFalse(remaingingCards.contains(Name.FIVE));
+		Assert.assertFalse(remaingingCards.contains(Name.THREE));
+		Assert.assertFalse(remaingingCards.contains(Name.TWO));
 
 		// When
 		remaingingCards = foldControlServices.getRemainingCardsInGivenColor(fold, trefle);
@@ -75,7 +75,7 @@ public class FoldControlServicesTest {
 		Done done = new Done();
 		final Player playerA = new Player();
 		final Fold cutFold = new Fold();
-		cutFold.setPlayedColor(Color.COEUR);
+		cutFold.setPlayedColor(Color.HEART);
 		cutFold.getCards().add(TarotDeckControlServicesImpl.AS_COEUR);
 		cutFold.getCards().add(TarotDeckControlServicesImpl.CINQ_ATOUT);
 		playerA.getFolds().add(cutFold);
@@ -130,12 +130,12 @@ public class FoldControlServicesTest {
 		// Given
 		Fold fold1 = new Fold();
 		fold1.getCards().addAll(Arrays.asList(TarotDeckControlServicesImpl.DEUX_PIQUE));
-		fold1.setPlayedColor(Color.PIQUE);
+		fold1.setPlayedColor(Color.SPADE);
 		Fold fold2 = new Fold();
-		fold2.setPlayedColor(Color.PIQUE);
+		fold2.setPlayedColor(Color.SPADE);
 		fold2.getCards().addAll(Arrays.asList(TarotDeckControlServicesImpl.SIX_PIQUE));
 		Fold fold3 = new Fold();
-		fold3.setPlayedColor(Color.PIQUE);
+		fold3.setPlayedColor(Color.SPADE);
 		fold3.getCards().addAll(Arrays.asList(TarotDeckControlServicesImpl.DEUX_PIQUE,
 				TarotDeckControlServicesImpl.SIX_PIQUE, TarotDeckControlServicesImpl.TROIS_PIQUE));
 		// empty fold
@@ -187,14 +187,14 @@ public class FoldControlServicesTest {
 		card3.setOwner(player3);
 		card4.setOwner(player4);
 
-		card1.setName(Name.SEPT);
-		card1.setColor(Color.CARREAU);
-		card2.setName(Name.DIX);
-		card2.setColor(Color.CARREAU);
-		card3.setName(Name.ROI);
-		card3.setColor(Color.COEUR);
-		card4.setName(Name.CINQ_ATOUT);
-		card4.setColor(Color.ATOUT);
+		card1.setName(Name.SEVEN);
+		card1.setColor(Color.DIAMOND);
+		card2.setName(Name.TEN);
+		card2.setColor(Color.DIAMOND);
+		card3.setName(Name.KING);
+		card3.setColor(Color.HEART);
+		card4.setName(Name.FIVE_TRUMP);
+		card4.setColor(Color.TRUMP);
 
 		fold.setPlayedColor(card1.getColor());
 		fold.getCards().add(card1);
@@ -259,19 +259,19 @@ public class FoldControlServicesTest {
 		foldControlServices.computeColor(fold);
 
 		// Then
-		Assert.assertEquals(Color.CARREAU, fold.getPlayedColor());
+		Assert.assertEquals(Color.DIAMOND, fold.getPlayedColor());
 
 		// When
 		foldControlServices.computeColor(fold2);
 
 		// Then
-		Assert.assertEquals(Color.PIQUE, fold2.getPlayedColor());
+		Assert.assertEquals(Color.SPADE, fold2.getPlayedColor());
 
 		// When
 		foldControlServices.computeColor(fold3);
 
 		// Then
-		Assert.assertEquals(Color.ATOUT, fold3.getPlayedColor());
+		Assert.assertEquals(Color.TRUMP, fold3.getPlayedColor());
 
 		// When
 		foldControlServices.computeColor(fold4);
@@ -290,13 +290,13 @@ public class FoldControlServicesTest {
 	public void testCanCardWinFold() {
 		// Given
 		Fold fold = new Fold();
-		fold.setPlayedColor(Color.TREFLE);
+		fold.setPlayedColor(Color.CLUB);
 		fold.getCards().add(TarotDeckControlServicesImpl.CINQ_TREFLE);
 		fold.getCards().add(TarotDeckControlServicesImpl.VALET_TREFLE);
 		fold.getCards().add(TarotDeckControlServicesImpl.HUIT_TREFLE);
 
 		Fold fold2 = new Fold();
-		fold2.setPlayedColor(Color.TREFLE);
+		fold2.setPlayedColor(Color.CLUB);
 		fold2.getCards().add(TarotDeckControlServicesImpl.CINQ_TREFLE);
 		fold2.getCards().add(TarotDeckControlServicesImpl.VALET_TREFLE);
 		fold2.getCards().add(TarotDeckControlServicesImpl.HUIT_ATOUT);

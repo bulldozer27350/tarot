@@ -2,16 +2,16 @@ package game.domain;
 
 public class Card {
 	
-	public enum Color {PIQUE, COEUR, CARREAU, TREFLE, ATOUT, AUTRE}
+	public enum Color {SPADE, HEART, DIAMOND, CLUB, TRUMP, OTHER}
 	
 	public enum Name { 
-		AS(1), DEUX(2), TROIS(3), QUATRE(4), CINQ(5), SIX(6), SEPT(7), HUIT(8), 
-		NEUF(9), DIX(10), VALET(11), CAVALIER(12), DAME(13), ROI(14), 
-		UN_ATOUT(15), DEUX_ATOUT(16), TROIS_ATOUT(17), QUATRE_ATOUT(18), CINQ_ATOUT(19), 
-		SIX_ATOUT(20), SEPT_ATOUT(21), HUIT_ATOUT(22), NEUF_ATOUT(23), DIX_ATOUT(24), 
-		ONZE_ATOUT(25), DOUZE_ATOUT(26), TREIZE_ATOUT(27), QUATORZE_ATOUT(28), QUINZE_ATOUT(29), 
-		SEIZE_ATOUT(30), DIX_SEPT_ATOUT(31), DIX_HUIT_ATOUT(32), DIX_NEUF_ATOUT(33), VINGT_ATOUT(34), 
-		VINGT_ET_UN_ATOUT(35), EXCUSE(0);
+		ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), 
+		NINE(9), TEN(10), JACK(11), HORSEMAN(12), QUEEN(13), KING(14), 
+		ONE_TRUMP(15), TWO_TRUMP(16), THREE_TRUMP(17), FOUR_TRUMP(18), FIVE_TRUMP(19), 
+		SIX_TRUMP(20), SEVEN_TRUMP(21), EIGHT_TRUMP(22), NINE_TRUMP(23), TEN_TRUMP(24), 
+		ELEVEN_TRUMP(25), TWELVE_TRUMP(26), THIRTEEN_TRUMP(27), FOURTEEN_TRUMP(28), FIVETEEN_TRUMP(29), 
+		SIXTEEN_TRUMP(30), SEVENTEEN_TRUMP(31), EIGHTEEN_TRUMP(32), NINETEEN_TRUMP(33), TWENTY_TRUMP(34), 
+		TWENTY_ONE_TRUMP(35), EXCUSE(0);
 		
 		int power;
 		private Name(int powerArg){
@@ -76,112 +76,112 @@ public class Card {
 		StringBuffer str = new StringBuffer();
 		String cardName = "";
 		switch(name){
-		case AS:
+		case ACE:
 			cardName = "A";
 			break;
-		case CAVALIER:
+		case HORSEMAN:
 			cardName = "C";
 			break;
-		case CINQ:
+		case FIVE:
 			cardName = "5";
 			break;
-		case DAME:
+		case QUEEN:
 			cardName = "D";
 			break;
-		case DEUX:
+		case TWO:
 			cardName = "2";
 			break;
-		case DIX:
+		case TEN:
 			cardName = "10";
 			break;
-		case DIX_HUIT_ATOUT:
+		case EIGHTEEN_TRUMP:
 			cardName = "18";
 			break;
-		case DIX_NEUF_ATOUT:
+		case NINETEEN_TRUMP:
 			cardName = "19";
 			break;
-		case DIX_SEPT_ATOUT:
+		case SEVENTEEN_TRUMP:
 			cardName = "17";
 			break;
-		case DOUZE_ATOUT:
+		case TWELVE_TRUMP:
 			cardName = "12";
 			break;
 		case EXCUSE:
 			cardName = "*";
 			break;
-		case HUIT:
+		case EIGHT:
 			cardName = "8";
 			break;
-		case NEUF:
+		case NINE:
 			cardName = "9";
 			break;
-		case ONZE_ATOUT:
+		case ELEVEN_TRUMP:
 			cardName = "11";
 			break;
-		case QUATORZE_ATOUT:
+		case FOURTEEN_TRUMP:
 			cardName = "14";
 			break;
-		case QUATRE:
+		case FOUR:
 			cardName = "4";
 			break;
-		case QUINZE_ATOUT:
+		case FIVETEEN_TRUMP:
 			cardName = "15";
 			break;
-		case ROI:
+		case KING:
 			cardName = "R";
 			break;
-		case SEIZE_ATOUT:
+		case SIXTEEN_TRUMP:
 			cardName = "16";
 			break;
-		case SEPT:
+		case SEVEN:
 			cardName = "7";
 			break;
 		case SIX:
 			cardName = "6";
 			break;
-		case TREIZE_ATOUT:
+		case THIRTEEN_TRUMP:
 			cardName = "13";
 			break;
-		case TROIS:
+		case THREE:
 			cardName = "3";
 			break;
-		case UN_ATOUT:
+		case ONE_TRUMP:
 			cardName = "1";
 			break;
-		case VALET:
+		case JACK:
 			cardName = "V";
 			break;
-		case VINGT_ATOUT:
+		case TWENTY_TRUMP:
 			cardName = "20";
 			break;
-		case VINGT_ET_UN_ATOUT:
+		case TWENTY_ONE_TRUMP:
 			cardName = "21";
 			break;
-		case DEUX_ATOUT:
+		case TWO_TRUMP:
 			cardName = "2";
 			break;
-		case TROIS_ATOUT:
+		case THREE_TRUMP:
 			cardName = "3";
 			break;
-		case QUATRE_ATOUT:
+		case FOUR_TRUMP:
 			cardName = "4";
 			break;
-		case CINQ_ATOUT:
+		case FIVE_TRUMP:
 			cardName = "5";
 			break;
-		case SIX_ATOUT:
+		case SIX_TRUMP:
 			cardName = "6";
 			break;
-		case SEPT_ATOUT:
+		case SEVEN_TRUMP:
 			cardName = "7";
 			break;
-		case HUIT_ATOUT:
+		case EIGHT_TRUMP:
 			cardName = "8";
 			break;
-		case NEUF_ATOUT:
+		case NINE_TRUMP:
 			cardName = "9";
 			break;
-		case DIX_ATOUT:
+		case TEN_TRUMP:
 			cardName = "10";
 			break;
 		default:

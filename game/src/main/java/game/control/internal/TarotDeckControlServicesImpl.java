@@ -22,89 +22,89 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
     private final PlayerControlServices playerControlServices;
     private final FoldControlServices foldControlServices;
 
-    public static final Card EXCUSE = new Card(Card.Color.AUTRE, Card.Name.EXCUSE, 4.5, null);
+    public static final Card EXCUSE = new Card(Card.Color.OTHER, Card.Name.EXCUSE, 4.5, null);
 
-    public static final Card UN_ATOUT = new Card(Card.Color.ATOUT, Card.Name.UN_ATOUT, 4.5, null);
-    public static final Card DEUX_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DEUX_ATOUT, 0.5, null);
-    public static final Card TROIS_ATOUT = new Card(Card.Color.ATOUT, Card.Name.TROIS_ATOUT, 0.5, null);
-    public static final Card QUATRE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.QUATRE_ATOUT, 0.5, null);
-    public static final Card CINQ_ATOUT = new Card(Card.Color.ATOUT, Card.Name.CINQ_ATOUT, 0.5, null);
-    public static final Card SIX_ATOUT = new Card(Card.Color.ATOUT, Card.Name.SIX_ATOUT, 0.5, null);
-    public static final Card SEPT_ATOUT = new Card(Card.Color.ATOUT, Card.Name.SEPT_ATOUT, 0.5, null);
-    public static final Card HUIT_ATOUT = new Card(Card.Color.ATOUT, Card.Name.HUIT_ATOUT, 0.5, null);
-    public static final Card NEUF_ATOUT = new Card(Card.Color.ATOUT, Card.Name.NEUF_ATOUT, 0.5, null);
-    public static final Card DIX_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DIX_ATOUT, 0.5, null);
-    public static final Card ONZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.ONZE_ATOUT, 0.5, null);
-    public static final Card DOUZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DOUZE_ATOUT, 0.5, null);
-    public static final Card TREIZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.TREIZE_ATOUT, 0.5, null);
-    public static final Card QUATORZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.QUATORZE_ATOUT, 0.5, null);
-    public static final Card QUINZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.QUINZE_ATOUT, 0.5, null);
-    public static final Card SEIZE_ATOUT = new Card(Card.Color.ATOUT, Card.Name.SEIZE_ATOUT, 0.5, null);
-    public static final Card DIX_SEPT_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DIX_SEPT_ATOUT, 0.5, null);
-    public static final Card DIX_HUIT_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DIX_HUIT_ATOUT, 0.5, null);
-    public static final Card DIX_NEUF_ATOUT = new Card(Card.Color.ATOUT, Card.Name.DIX_NEUF_ATOUT, 0.5, null);
-    public static final Card VINGT_ATOUT = new Card(Card.Color.ATOUT, Card.Name.VINGT_ATOUT, 0.5, null);
-    public static final Card VINGT_ET_UN_ATOUT = new Card(Card.Color.ATOUT, Card.Name.VINGT_ET_UN_ATOUT, 4.5, null);
+    public static final Card UN_ATOUT = new Card(Card.Color.TRUMP, Card.Name.ONE_TRUMP, 4.5, null);
+    public static final Card DEUX_ATOUT = new Card(Card.Color.TRUMP, Card.Name.TWO_TRUMP, 0.5, null);
+    public static final Card TROIS_ATOUT = new Card(Card.Color.TRUMP, Card.Name.THREE_TRUMP, 0.5, null);
+    public static final Card QUATRE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.FOUR_TRUMP, 0.5, null);
+    public static final Card CINQ_ATOUT = new Card(Card.Color.TRUMP, Card.Name.FIVE_TRUMP, 0.5, null);
+    public static final Card SIX_ATOUT = new Card(Card.Color.TRUMP, Card.Name.SIX_TRUMP, 0.5, null);
+    public static final Card SEPT_ATOUT = new Card(Card.Color.TRUMP, Card.Name.SEVEN_TRUMP, 0.5, null);
+    public static final Card HUIT_ATOUT = new Card(Card.Color.TRUMP, Card.Name.EIGHT_TRUMP, 0.5, null);
+    public static final Card NEUF_ATOUT = new Card(Card.Color.TRUMP, Card.Name.NINE_TRUMP, 0.5, null);
+    public static final Card DIX_ATOUT = new Card(Card.Color.TRUMP, Card.Name.TEN_TRUMP, 0.5, null);
+    public static final Card ONZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.ELEVEN_TRUMP, 0.5, null);
+    public static final Card DOUZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.TWELVE_TRUMP, 0.5, null);
+    public static final Card TREIZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.THIRTEEN_TRUMP, 0.5, null);
+    public static final Card QUATORZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.FOURTEEN_TRUMP, 0.5, null);
+    public static final Card QUINZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.FIVETEEN_TRUMP, 0.5, null);
+    public static final Card SEIZE_ATOUT = new Card(Card.Color.TRUMP, Card.Name.SIXTEEN_TRUMP, 0.5, null);
+    public static final Card DIX_SEPT_ATOUT = new Card(Card.Color.TRUMP, Card.Name.SEVENTEEN_TRUMP, 0.5, null);
+    public static final Card DIX_HUIT_ATOUT = new Card(Card.Color.TRUMP, Card.Name.EIGHTEEN_TRUMP, 0.5, null);
+    public static final Card DIX_NEUF_ATOUT = new Card(Card.Color.TRUMP, Card.Name.NINETEEN_TRUMP, 0.5, null);
+    public static final Card VINGT_ATOUT = new Card(Card.Color.TRUMP, Card.Name.TWENTY_TRUMP, 0.5, null);
+    public static final Card VINGT_ET_UN_ATOUT = new Card(Card.Color.TRUMP, Card.Name.TWENTY_ONE_TRUMP, 4.5, null);
 
-    public static final Card AS_PIQUE = new Card(Card.Color.PIQUE, Card.Name.AS, 0.5, null);
-    public static final Card DEUX_PIQUE = new Card(Card.Color.PIQUE, Card.Name.DEUX, 0.5, null);
-    public static final Card TROIS_PIQUE = new Card(Card.Color.PIQUE, Card.Name.TROIS, 0.5, null);
-    public static final Card QUATRE_PIQUE = new Card(Card.Color.PIQUE, Card.Name.QUATRE, 0.5, null);
-    public static final Card CINQ_PIQUE = new Card(Card.Color.PIQUE, Card.Name.CINQ, 0.5, null);
-    public static final Card SIX_PIQUE = new Card(Card.Color.PIQUE, Card.Name.SIX, 0.5, null);
-    public static final Card SEPT_PIQUE = new Card(Card.Color.PIQUE, Card.Name.SEPT, 0.5, null);
-    public static final Card HUIT_PIQUE = new Card(Card.Color.PIQUE, Card.Name.HUIT, 0.5, null);
-    public static final Card NEUF_PIQUE = new Card(Card.Color.PIQUE, Card.Name.NEUF, 0.5, null);
-    public static final Card DIX_PIQUE = new Card(Card.Color.PIQUE, Card.Name.DIX, 0.5, null);
-    public static final Card VALET_PIQUE = new Card(Card.Color.PIQUE, Card.Name.VALET, 1.5, null);
-    public static final Card CAVALIER_PIQUE = new Card(Card.Color.PIQUE, Card.Name.CAVALIER, 2.5, null);
-    public static final Card DAME_PIQUE = new Card(Card.Color.PIQUE, Card.Name.DAME, 3.5, null);
-    public static final Card ROI_PIQUE = new Card(Card.Color.PIQUE, Card.Name.ROI, 4.5, null);
+    public static final Card AS_PIQUE = new Card(Card.Color.SPADE, Card.Name.ACE, 0.5, null);
+    public static final Card DEUX_PIQUE = new Card(Card.Color.SPADE, Card.Name.TWO, 0.5, null);
+    public static final Card TROIS_PIQUE = new Card(Card.Color.SPADE, Card.Name.THREE, 0.5, null);
+    public static final Card QUATRE_PIQUE = new Card(Card.Color.SPADE, Card.Name.FOUR, 0.5, null);
+    public static final Card CINQ_PIQUE = new Card(Card.Color.SPADE, Card.Name.FIVE, 0.5, null);
+    public static final Card SIX_PIQUE = new Card(Card.Color.SPADE, Card.Name.SIX, 0.5, null);
+    public static final Card SEPT_PIQUE = new Card(Card.Color.SPADE, Card.Name.SEVEN, 0.5, null);
+    public static final Card HUIT_PIQUE = new Card(Card.Color.SPADE, Card.Name.EIGHT, 0.5, null);
+    public static final Card NEUF_PIQUE = new Card(Card.Color.SPADE, Card.Name.NINE, 0.5, null);
+    public static final Card DIX_PIQUE = new Card(Card.Color.SPADE, Card.Name.TEN, 0.5, null);
+    public static final Card VALET_PIQUE = new Card(Card.Color.SPADE, Card.Name.JACK, 1.5, null);
+    public static final Card CAVALIER_PIQUE = new Card(Card.Color.SPADE, Card.Name.HORSEMAN, 2.5, null);
+    public static final Card DAME_PIQUE = new Card(Card.Color.SPADE, Card.Name.QUEEN, 3.5, null);
+    public static final Card ROI_PIQUE = new Card(Card.Color.SPADE, Card.Name.KING, 4.5, null);
 
-    public static final Card AS_COEUR = new Card(Card.Color.COEUR, Card.Name.AS, 0.5, null);
-    public static final Card DEUX_COEUR = new Card(Card.Color.COEUR, Card.Name.DEUX, 0.5, null);
-    public static final Card TROIS_COEUR = new Card(Card.Color.COEUR, Card.Name.TROIS, 0.5, null);
-    public static final Card QUATRE_COEUR = new Card(Card.Color.COEUR, Card.Name.QUATRE, 0.5, null);
-    public static final Card CINQ_COEUR = new Card(Card.Color.COEUR, Card.Name.CINQ, 0.5, null);
-    public static final Card SIX_COEUR = new Card(Card.Color.COEUR, Card.Name.SIX, 0.5, null);
-    public static final Card SEPT_COEUR = new Card(Card.Color.COEUR, Card.Name.SEPT, 0.5, null);
-    public static final Card HUIT_COEUR = new Card(Card.Color.COEUR, Card.Name.HUIT, 0.5, null);
-    public static final Card NEUF_COEUR = new Card(Card.Color.COEUR, Card.Name.NEUF, 0.5, null);
-    public static final Card DIX_COEUR = new Card(Card.Color.COEUR, Card.Name.DIX, 0.5, null);
-    public static final Card VALET_COEUR = new Card(Card.Color.COEUR, Card.Name.VALET, 1.5, null);
-    public static final Card CAVALIER_COEUR = new Card(Card.Color.COEUR, Card.Name.CAVALIER, 2.5, null);
-    public static final Card DAME_COEUR = new Card(Card.Color.COEUR, Card.Name.DAME, 3.5, null);
-    public static final Card ROI_COEUR = new Card(Card.Color.COEUR, Card.Name.ROI, 4.5, null);
+    public static final Card AS_COEUR = new Card(Card.Color.HEART, Card.Name.ACE, 0.5, null);
+    public static final Card DEUX_COEUR = new Card(Card.Color.HEART, Card.Name.TWO, 0.5, null);
+    public static final Card TROIS_COEUR = new Card(Card.Color.HEART, Card.Name.THREE, 0.5, null);
+    public static final Card QUATRE_COEUR = new Card(Card.Color.HEART, Card.Name.FOUR, 0.5, null);
+    public static final Card CINQ_COEUR = new Card(Card.Color.HEART, Card.Name.FIVE, 0.5, null);
+    public static final Card SIX_COEUR = new Card(Card.Color.HEART, Card.Name.SIX, 0.5, null);
+    public static final Card SEPT_COEUR = new Card(Card.Color.HEART, Card.Name.SEVEN, 0.5, null);
+    public static final Card HUIT_COEUR = new Card(Card.Color.HEART, Card.Name.EIGHT, 0.5, null);
+    public static final Card NEUF_COEUR = new Card(Card.Color.HEART, Card.Name.NINE, 0.5, null);
+    public static final Card DIX_COEUR = new Card(Card.Color.HEART, Card.Name.TEN, 0.5, null);
+    public static final Card VALET_COEUR = new Card(Card.Color.HEART, Card.Name.JACK, 1.5, null);
+    public static final Card CAVALIER_COEUR = new Card(Card.Color.HEART, Card.Name.HORSEMAN, 2.5, null);
+    public static final Card DAME_COEUR = new Card(Card.Color.HEART, Card.Name.QUEEN, 3.5, null);
+    public static final Card ROI_COEUR = new Card(Card.Color.HEART, Card.Name.KING, 4.5, null);
 
-    public static final Card AS_CARREAU = new Card(Card.Color.CARREAU, Card.Name.AS, 0.5, null);
-    public static final Card DEUX_CARREAU = new Card(Card.Color.CARREAU, Card.Name.DEUX, 0.5, null);
-    public static final Card TROIS_CARREAU = new Card(Card.Color.CARREAU, Card.Name.TROIS, 0.5, null);
-    public static final Card QUATRE_CARREAU = new Card(Card.Color.CARREAU, Card.Name.QUATRE, 0.5, null);
-    public static final Card CINQ_CARREAU = new Card(Card.Color.CARREAU, Card.Name.CINQ, 0.5, null);
-    public static final Card SIX_CARREAU = new Card(Card.Color.CARREAU, Card.Name.SIX, 0.5, null);
-    public static final Card SEPT_CARREAU = new Card(Card.Color.CARREAU, Card.Name.SEPT, 0.5, null);
-    public static final Card HUIT_CARREAU = new Card(Card.Color.CARREAU, Card.Name.HUIT, 0.5, null);
-    public static final Card NEUF_CARREAU = new Card(Card.Color.CARREAU, Card.Name.NEUF, 0.5, null);
-    public static final Card DIX_CARREAU = new Card(Card.Color.CARREAU, Card.Name.DIX, 0.5, null);
-    public static final Card VALET_CARREAU = new Card(Card.Color.CARREAU, Card.Name.VALET, 1.5, null);
-    public static final Card CAVALIER_CARREAU = new Card(Card.Color.CARREAU, Card.Name.CAVALIER, 2.5, null);
-    public static final Card DAME_CARREAU = new Card(Card.Color.CARREAU, Card.Name.DAME, 3.5, null);
-    public static final Card ROI_CARREAU = new Card(Card.Color.CARREAU, Card.Name.ROI, 4.5, null);
+    public static final Card AS_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.ACE, 0.5, null);
+    public static final Card DEUX_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.TWO, 0.5, null);
+    public static final Card TROIS_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.THREE, 0.5, null);
+    public static final Card QUATRE_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.FOUR, 0.5, null);
+    public static final Card CINQ_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.FIVE, 0.5, null);
+    public static final Card SIX_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.SIX, 0.5, null);
+    public static final Card SEPT_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.SEVEN, 0.5, null);
+    public static final Card HUIT_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.EIGHT, 0.5, null);
+    public static final Card NEUF_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.NINE, 0.5, null);
+    public static final Card DIX_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.TEN, 0.5, null);
+    public static final Card VALET_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.JACK, 1.5, null);
+    public static final Card CAVALIER_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.HORSEMAN, 2.5, null);
+    public static final Card DAME_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.QUEEN, 3.5, null);
+    public static final Card ROI_CARREAU = new Card(Card.Color.DIAMOND, Card.Name.KING, 4.5, null);
 
-    public static final Card AS_TREFLE = new Card(Card.Color.TREFLE, Card.Name.AS, 0.5, null);
-    public static final Card DEUX_TREFLE = new Card(Card.Color.TREFLE, Card.Name.DEUX, 0.5, null);
-    public static final Card TROIS_TREFLE = new Card(Card.Color.TREFLE, Card.Name.TROIS, 0.5, null);
-    public static final Card QUATRE_TREFLE = new Card(Card.Color.TREFLE, Card.Name.QUATRE, 0.5, null);
-    public static final Card CINQ_TREFLE = new Card(Card.Color.TREFLE, Card.Name.CINQ, 0.5, null);
-    public static final Card SIX_TREFLE = new Card(Card.Color.TREFLE, Card.Name.SIX, 0.5, null);
-    public static final Card SEPT_TREFLE = new Card(Card.Color.TREFLE, Card.Name.SEPT, 0.5, null);
-    public static final Card HUIT_TREFLE = new Card(Card.Color.TREFLE, Card.Name.HUIT, 0.5, null);
-    public static final Card NEUF_TREFLE = new Card(Card.Color.TREFLE, Card.Name.NEUF, 0.5, null);
-    public static final Card DIX_TREFLE = new Card(Card.Color.TREFLE, Card.Name.DIX, 0.5, null);
-    public static final Card VALET_TREFLE = new Card(Card.Color.TREFLE, Card.Name.VALET, 1.5, null);
-    public static final Card CAVALIER_TREFLE = new Card(Card.Color.TREFLE, Card.Name.CAVALIER, 2.5, null);
-    public static final Card DAME_TREFLE = new Card(Card.Color.TREFLE, Card.Name.DAME, 3.5, null);
-    public static final Card ROI_TREFLE = new Card(Card.Color.TREFLE, Card.Name.ROI, 4.5, null);
+    public static final Card AS_TREFLE = new Card(Card.Color.CLUB, Card.Name.ACE, 0.5, null);
+    public static final Card DEUX_TREFLE = new Card(Card.Color.CLUB, Card.Name.TWO, 0.5, null);
+    public static final Card TROIS_TREFLE = new Card(Card.Color.CLUB, Card.Name.THREE, 0.5, null);
+    public static final Card QUATRE_TREFLE = new Card(Card.Color.CLUB, Card.Name.FOUR, 0.5, null);
+    public static final Card CINQ_TREFLE = new Card(Card.Color.CLUB, Card.Name.FIVE, 0.5, null);
+    public static final Card SIX_TREFLE = new Card(Card.Color.CLUB, Card.Name.SIX, 0.5, null);
+    public static final Card SEPT_TREFLE = new Card(Card.Color.CLUB, Card.Name.SEVEN, 0.5, null);
+    public static final Card HUIT_TREFLE = new Card(Card.Color.CLUB, Card.Name.EIGHT, 0.5, null);
+    public static final Card NEUF_TREFLE = new Card(Card.Color.CLUB, Card.Name.NINE, 0.5, null);
+    public static final Card DIX_TREFLE = new Card(Card.Color.CLUB, Card.Name.TEN, 0.5, null);
+    public static final Card VALET_TREFLE = new Card(Card.Color.CLUB, Card.Name.JACK, 1.5, null);
+    public static final Card CAVALIER_TREFLE = new Card(Card.Color.CLUB, Card.Name.HORSEMAN, 2.5, null);
+    public static final Card DAME_TREFLE = new Card(Card.Color.CLUB, Card.Name.QUEEN, 3.5, null);
+    public static final Card ROI_TREFLE = new Card(Card.Color.CLUB, Card.Name.KING, 4.5, null);
 
     public TarotDeckControlServicesImpl(final PlayerControlServices playerControlServicesArg,
 	    final DoneControlServices doneControlServicesArg, final FoldControlServices foldControlServicesArg) {
@@ -416,17 +416,17 @@ public class TarotDeckControlServicesImpl implements TarotDeckControlServices {
 
     private void sortCards(final Player player) {
 	final List<Card> piques = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.PIQUE).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.SPADE).collect(Collectors.toList()));
 	final List<Card> coeurs = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.COEUR).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.HEART).collect(Collectors.toList()));
 	final List<Card> carreaux = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.CARREAU).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.DIAMOND).collect(Collectors.toList()));
 	final List<Card> trefles = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.TREFLE).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.CLUB).collect(Collectors.toList()));
 	final List<Card> atouts = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.ATOUT).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.TRUMP).collect(Collectors.toList()));
 	final List<Card> excuses = new ArrayList<>(
-		player.getHand().stream().filter(c -> c.getColor() == Color.AUTRE).collect(Collectors.toList()));
+		player.getHand().stream().filter(c -> c.getColor() == Color.OTHER).collect(Collectors.toList()));
 	piques.sort((c1, c2) -> c1.getName().getPower() - c2.getName().getPower());
 	coeurs.sort((c1, c2) -> c1.getName().getPower() - c2.getName().getPower());
 	carreaux.sort((c1, c2) -> c1.getName().getPower() - c2.getName().getPower());
