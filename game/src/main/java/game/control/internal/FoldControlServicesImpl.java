@@ -2,16 +2,15 @@ package game.control.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import game.control.FoldControlServices;
 import game.domain.Card;
 import game.domain.Card.Color;
 import game.domain.Card.Name;
-import game.domain.Player.Team;
 import game.domain.Done;
 import game.domain.Fold;
 import game.domain.Player;
+import game.domain.Player.Team;
 
 public class FoldControlServicesImpl implements FoldControlServices {
 
@@ -32,17 +31,13 @@ public class FoldControlServicesImpl implements FoldControlServices {
 	}
 
 	@Override
-	public Color getColor(Fold fold) {
-		return null;
-	}
-
-	@Override
 	public boolean canCardWinFold(Fold fold, Card wantedCard) {
 		boolean good = false;
 		int highestValue = 0;
 		Card strongestCard = null;
 		for (Card card : fold.getCards()) {
-			if (card.getName().getPower() > highestValue) {
+			if (card.getName().getPower() > highestValue
+					&& (card.getColor() == fold.getPlayedColor() || card.getColor() == Color.ATOUT)) {
 				highestValue = card.getName().getPower();
 				strongestCard = card;
 			}
@@ -50,7 +45,8 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		if (strongestCard == null) {
 			good = true;
 		} else {
-			good = wantedCard.getName().getPower() >= strongestCard.getName().getPower();
+			good = wantedCard.getName().getPower() >= strongestCard.getName().getPower()
+					&& (wantedCard.getColor() == fold.getPlayedColor() || wantedCard.getColor() == Color.ATOUT);
 		}
 		return good;
 	}
@@ -61,11 +57,15 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		foldedCards.stream().forEach(f -> allFoldedCards.addAll(f.getCards()));
 		List<Name> remainingNames = getRemainingCardsInGivenColor(allFoldedCards, wantedCard.getColor());
 		boolean good = false;
+		// if no more cards in this color, the card is necessary the highest one
 		if (remainingNames.isEmpty()) {
 			good = true;
 		} else {
+			// Is the wantedCard the most powerful card in this color ?
 			boolean powerful = remainingNames.get(remainingNames.size() - 1).getPower() == wantedCard.getName()
 					.getPower();
+			
+			// is this color has already been cut in previous folds ?
 			boolean isCuts = false;
 			for (Player player : done.getPlayers()) {
 				for (Fold fold : player.getFolds()) {
@@ -141,7 +141,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 			players.add(donePlayers.get((i + playerIndex) % donePlayers.size()));
 		}
 		// Remove already played players
-		currentFold.getCards().stream().forEach(e -> players.remove(e));
+		currentFold.getCards().stream().forEach(e -> players.remove(e.getOwner()));
 		return players;
 	}
 
@@ -152,21 +152,18 @@ public class FoldControlServicesImpl implements FoldControlServices {
 			throw new UnsupportedOperationException("To know if we can give points, we must have a not empty fold !");
 		}
 		if (fold.getCards().stream().filter(card -> card.getColor() == Color.ATOUT).count() != 0) {
+			// There is a cut. Is it possible to give points ?
+			// Who has the highest atout on the fold ?
 			List<Card> foldCards = new ArrayList<>(fold.getCards());
 			foldCards.sort((e1, e2) -> e2.getName().getPower() - e1.getName().getPower());
-			// There is a cut. Is it possible to give points ?
-
-			// Who has the highest atout on the fold ?
 			if (foldCards.get(0).getOwner().getTeam() == player.getTeam()) {
-				if (isTeamPlayTheLast(done, fold, player)) {
-					givePoints = true;
-				}
+				givePoints = isTeamPlayTheLast(done, fold, player);
 			}
 		}
 		return givePoints;
 	}
 
-	boolean isTeamPlayTheLast(Done done, Fold fold, Player player) {
+	public boolean isTeamPlayTheLast(Done done, Fold fold, Player player) {
 		boolean theLast = false;
 		// We can't take a risk if we don't play at the last position so we have
 		// to be sure of the scenario.
@@ -178,17 +175,17 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		// mates. (later, getTeam couldn't return unknown anymore, we always
 		// know if we are in a defense team or attack team)
 		// FIXME: delete test on player team == unknown.
-		if (getTeam(player) == Team.UNKNOWN
+		if (this.getTeam(player) == Team.UNKNOWN
 				|| (done.getPlayers().stream().filter(p -> p.getTeam() == Team.UNKNOWN).count() != 0
-						&& getTeam(player) == Team.ATTACK)) {
+						&& this.getTeam(player) == Team.ATTACK)) {
 			theLast = fold.getCards().size() == done.getPlayers().size() - 1;
 		} else {
 			// The team are known
-			int otherTeamMatesNumber = (int) done.getPlayers().stream().filter(e -> e.getTeam() != getTeam(player))
-					.count();
+			final int otherTeamMatesNumber = (int) done.getPlayers().stream()
+					.filter(e -> e.getTeam() != this.getTeam(player)).count();
 			int otherTeamMatesCard = 0;
-			for (Card card : fold.getCards()) {
-				if (card.getOwner().getTeam() != getTeam(player)) {
+			for (final Card card : fold.getCards()) {
+				if (card.getOwner().getTeam() != this.getTeam(player)) {
 					otherTeamMatesCard++;
 				}
 			}
@@ -204,6 +201,19 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		// king) is our hand in case of unknown team.
 		// But for the moment, we can just give back the player's team.
 		return player.getTeam();
+	}
+
+	@Override
+	public void computeColor(Fold fold) {
+		Color foldColor = null;
+		if (!fold.getCards().isEmpty()) {
+			if (fold.getCards().get(0).getColor() != Color.AUTRE) {
+				foldColor = fold.getCards().get(0).getColor();
+			} else if (fold.getCards().size() > 1) {
+				foldColor = fold.getCards().get(1).getColor();
+			}
+		}
+		fold.setPlayedColor(foldColor);
 	}
 
 }
