@@ -128,7 +128,65 @@ public class PlayerControlServicesTest {
 	
 	@Test
 	public void testSelectColorCardToPlay() {
-		// should be implemented because it has been overiden in another test
-		Assert.fail();
+		// Given
+		Done done = new Done();
+		Player player = new Player();
+		Fold fold1 = new Fold();
+		fold1.getCards().add(TarotDeckControlServicesImpl.CINQ_ATOUT);
+		Fold fold2 = new Fold();
+		fold2.getCards().add(TarotDeckControlServicesImpl.CINQ_ATOUT);
+		Fold fold3 = new Fold();
+		Fold fold4 = new Fold();
+		List<Fold> previousFolds = new ArrayList<>();
+		List<Card> cardsWithExcuse = Arrays.asList(TarotDeckControlServicesImpl.EXCUSE, TarotDeckControlServicesImpl.AS_TREFLE);
+		List<Card> cards = Arrays.asList(TarotDeckControlServicesImpl.CAVALIER_CARREAU, TarotDeckControlServicesImpl.DAME_PIQUE, TarotDeckControlServicesImpl.DAME_COEUR);
+		FoldControlServicesImpl foldControlServicesImpl = new FoldControlServicesImpl(){
+			@Override
+			public boolean canGivePoints(Fold foldParam, Player player, Done done) {
+				return foldParam == fold1;
+			}
+			
+			@Override
+			public boolean isTeamPlayTheLast(Done done, Fold foldParam, Player player) {
+				return fold3 == foldParam;
+			}
+			
+			@Override
+			public boolean canCardWinFold(Fold fold, Card wantedCard) {
+				return fold == fold3;
+			}
+		};
+		PlayerControlServicesImpl playerControlServices = new PlayerControlServicesImpl(foldControlServicesImpl);
+
+		// When only excuse and one other card ...
+		Card returnedCard = playerControlServices.selectColorCardToPlay(done, player, cardsWithExcuse, fold1, previousFolds);
+		
+		// ... Then we expect that excuse is played
+		Assert.assertEquals(TarotDeckControlServicesImpl.EXCUSE, returnedCard);
+		
+		// When there is a cut in the current fold and player can give points ...
+		returnedCard = playerControlServices.selectColorCardToPlay(done, player, cards, fold1, previousFolds);
+		
+		// ... Then since the card are supposed to be sorted by power, we have to expect that the last card is played.
+		Assert.assertEquals(TarotDeckControlServicesImpl.DAME_COEUR, returnedCard);
+		
+		// When there is a cut, but it is not a good idea to give points...
+		returnedCard = playerControlServices.selectColorCardToPlay(done, player, cards, fold2, previousFolds);
+		
+		// .. Then since the cards are sorted by their power, we expect to give the less power card as possible
+		Assert.assertEquals(TarotDeckControlServicesImpl.CAVALIER_CARREAU, returnedCard);
+		
+		// When 
+		returnedCard = playerControlServices.selectColorCardToPlay(done, player, cards, fold3, previousFolds);
+		
+		// Then
+		Assert.assertEquals(TarotDeckControlServicesImpl.DAME_COEUR, returnedCard);
+		
+		// When
+		returnedCard = playerControlServices.selectColorCardToPlay(done, player, cards, fold4, previousFolds);
+		
+		// Then
+		Assert.assertEquals(TarotDeckControlServicesImpl.CAVALIER_CARREAU, returnedCard);
+		Assert.fail("Il manque des cas à tester !");
 	}
 }

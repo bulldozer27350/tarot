@@ -153,7 +153,7 @@ public class FoldControlServicesImpl implements FoldControlServices {
 		}
 		if (fold.getCards().stream().filter(card -> card.getColor() == Color.TRUMP).count() != 0) {
 			// There is a cut. Is it possible to give points ?
-			// Who has the highest atout on the fold ?
+			// Who has the highest trump on the fold ?
 			List<Card> foldCards = new ArrayList<>(fold.getCards());
 			foldCards.sort((e1, e2) -> e2.getName().getPower() - e1.getName().getPower());
 			if (foldCards.get(0).getOwner().getTeam() == player.getTeam()) {

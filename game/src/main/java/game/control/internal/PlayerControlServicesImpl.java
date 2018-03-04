@@ -292,6 +292,16 @@ public class PlayerControlServicesImpl implements PlayerControlServices {
 		return card;
 	}
 
+	/**
+	 * Select color card to play.
+	 *
+	 * @param done the done
+	 * @param player the player
+	 * @param cards the cards in the player's hand. These are sorted by power from less power to most
+	 * @param fold the fold in progress
+	 * @param previousFolds the previous folds
+	 * @return the best card to play
+	 */
 	Card selectColorCardToPlay(final Done done, final Player player, final List<Card> cards, final Fold fold,
 			final List<Fold> previousFolds) {
 		Card randomCard = null;
